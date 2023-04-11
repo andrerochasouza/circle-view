@@ -1,38 +1,60 @@
 package br.com.andre.ml.aplicacao;
 
-import br.com.andre.ml.dominio.Node;
-
-import java.util.ArrayList;
-
-import static br.com.andre.ml.aplicacao.Functions.customError;
-import static br.com.andre.ml.aplicacao.Functions.sumNodesBySigmoid;
+import br.com.andre.data.dominio.Pixel;
 
 public class Calculation {
 
-    public static double calculateErrorSum(ArrayList<ArrayList<Node>> layers, double[] expectedOutput, boolean print) {
-
-        double errorSum = 0;
-        for(ArrayList<Node> nodes : layers){
-            errorSum += calculateError(nodes, expectedOutput, print);
+    public static double train(Pixel[] pixels, double[] targets, double[] biasOcult, double[] bias, boolean randomWeights,boolean saveWeights){
+        double[] inputs = new double[pixels.length];
+        for (int i = 0; i < pixels.length; i++){
+            inputs[i] = pixels[i].getValue();
         }
 
-        System.out.println("Error: " + errorSum);
-        return errorSum;
-    }
+        double[][] weightsOcult = null;
+        double[][] weights = null;
+        double[] outputsOcult = null;
+        double[] outputs = null;
+        double[] outputErrors = null;
+        double[] hiddenErrors = null;
+        double learningRate = 0.5;
+        double costError = 0;
 
-    private static double calculateError(ArrayList<Node> nodes, double[] expectedOutput, boolean print) {
+        if(randomWeights){
+            weightsOcult = Functions.getRandomWeights(10, 2);
+            outputsOcult = Functions.feedForward(weightsOcult, inputs, biasOcult);
 
-        double[] outputs = sumNodesBySigmoid(nodes);
-
-        if(print){
-            for (int i = 0; i < outputs.length; i++) {
-                System.out.println("Output: " + outputs[i]);
-            }
+            weights = Functions.getRandomWeights(2, 10);
+            outputs = Functions.feedForward(weights, outputsOcult, bias);
         }
 
-        double error = customError(outputs, new double[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        System.out.println("---- Ocult ----");
+        for(double output : outputsOcult){
+            System.out.println(output);
+        }
 
-        return error;
+        System.out.println("---- Outputs ----");
+        for(double output : outputs){
+            System.out.println(output);
+        }
+
+        outputErrors = Functions.outputErrors(outputs, targets);
+        System.out.println("---- Outputs errors ----");
+        for(double outputError : outputErrors){
+            System.out.println(outputError);
+        }
+
+        hiddenErrors = Functions.hiddenErros(weights, outputErrors);
+        System.out.println("---- Hidden errors ----");
+        for(double hiddenError : hiddenErrors){
+            System.out.println(hiddenError);
+        }
+
+        costError = Functions.costFunction(outputs, targets);
+        System.out.println("---- Cost error ----");
+        System.out.println(costError);
+
+        return 0;
     }
+
 
 }
