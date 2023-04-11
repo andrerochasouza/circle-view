@@ -1,19 +1,28 @@
 package br.com.andre;
 
-import br.com.andre.data.aplicacao.FakeData;
+import br.com.andre.data.dominio.Pixel;
 import br.com.andre.ml.aplicacao.Calculation;
-import br.com.andre.ml.dominio.Node;
-
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args)  {
 
-        ArrayList<ArrayList<Node>> layers = new ArrayList<>();
-        double bias = 0;
 
-        layers = FakeData.randomNodes(5, new double[]{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1}, bias);
+        Pixel[] inputs = new Pixel[2];
+        for (int i = 0; i < inputs.length; i++){
+            inputs[i] = new Pixel(Math.round(100 * Math.random()) / 100.0, 1, 1);
+        }
 
-        Calculation.calculateErrorSum(layers, new double[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, false);
+        System.out.println("---- Inputs ----");
+        for (Pixel input : inputs) {
+            System.out.println(input.getValue());
+        }
+
+        double[] biasOcult = {0,0};
+        double[] bias = {0,0,0,0,0,0,0,0,0,0};
+        double[] outputs = {1,0};
+
+
+        Calculation.train(inputs, outputs, biasOcult, bias, true, true);
+
     }
 }
