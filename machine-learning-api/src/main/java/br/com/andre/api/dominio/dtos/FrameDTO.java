@@ -1,4 +1,4 @@
-package br.com.andre.api.dominio;
+package br.com.andre.api.dominio.dtos;
 
 import br.com.andre.data.dominio.Pixel;
 

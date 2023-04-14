@@ -1,10 +1,12 @@
 package br.com.andre;
 
+import br.com.andre.api.aplicacao.HttpClientApi;
 import br.com.andre.ml.aplicacao.NeuralNetwork;
 
 public class Main {
     public static void main(String[] args)  {
 
+        HttpClientApi.initServer(4567, true, false, false);
 
         NeuralNetwork nn = new NeuralNetwork(100, 10, 10);
 
