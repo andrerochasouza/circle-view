@@ -1,6 +1,13 @@
 package br.com.andre.api.aplicacao;
 
+import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
+import spark.utils.IOUtils;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static spark.Spark.*;
 
@@ -38,19 +45,40 @@ public class HttpClientApi {
             }
 
             if(enableAuth){
-                // TODO: Implementar autenticação
+                // basic auth
+
+                String auth = req.headers("Authorization");
+                String username = YamlUtil.get("username").toString();
+                String password = YamlUtil.get("password").toString();
+                boolean authenticated = false;
+
+                if (auth != null && auth.startsWith("Basic ")) {
+                    String base64Credentials = auth.substring("Basic".length()).trim();
+                    String credentials = new String(Base64.getDecoder().decode(base64Credentials),"UTF-8");
+
+                    final String[] values = credentials.split(":", 2);
+                    if (values.length == 2) {
+                        if (username.equals(values[0]) && password.equals(values[1])) {
+                            authenticated = true;
+                        }
+                    }
+                }
+
+                if (!authenticated) {
+                    halt(401, "Não autorizado - Basic Auth");
+                }
+
             }
 
         });
 
         // HealthCheck
         if(enableHealthCheck){
-            get("/healthcheck", (req, res) -> "OK");
-
-            if (!HealthCheck.healthCheckByCurl(port) && enableHealthCheck) {
-                System.out.println("Erro ao iniciar o servidor - HealthCheck");
-                System.exit(0);
-            }
+            get("/healthcheck", (req, res) -> {
+                res.status(200);
+                return " ---------- HealthCheck - OK (EnableAuth: " + enableAuth + ") (EnableCORS: " + enableCORS + ") ---------- ";
+            });
+            System.out.println(HealthCheck.healthCheckByHttpUrl(port, enableAuth));
         }
 
         // Mapeamento de Paths do API
