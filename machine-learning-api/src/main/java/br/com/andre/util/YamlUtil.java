@@ -24,7 +24,7 @@ public class YamlUtil {
             throw new RuntimeException("Valor da chave não encontrada - " + key);
         }
 
-        return obj.get(key).toString();
+        return obj.get(key);
     }
 
 }
