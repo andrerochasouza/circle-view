@@ -1,28 +1,27 @@
 package br.com.andre;
 
-import br.com.andre.data.dominio.Pixel;
-import br.com.andre.ml.aplicacao.Calculation;
+import br.com.andre.ml.aplicacao.NeuralNetwork;
 
 public class Main {
     public static void main(String[] args)  {
 
 
-        Pixel[] inputs = new Pixel[2];
-        for (int i = 0; i < inputs.length; i++){
-            inputs[i] = new Pixel(Math.round(100 * Math.random()) / 100.0, 1, 1);
+        NeuralNetwork nn = new NeuralNetwork(100, 10, 10);
+
+        double[] inputs = new double[100];
+        double[] target = {0,0, 0, 0, 0, 0, 0, 0, 1, 0};
+
+
+        for (int i = 0; i < 100; i++) {
+            inputs[i] = Math.random();
         }
 
-        System.out.println("---- Inputs ----");
-        for (Pixel input : inputs) {
-            System.out.println(input.getValue());
+        nn.train(inputs, target, 0.1, 1000);
+
+        double[] output = nn.feedforward(inputs);
+        for (int i = 0; i < output.length; i++) {
+            System.out.println(output[i]);
         }
-
-        double[] biasOcult = {0,0};
-        double[] bias = {0,0,0,0,0,0,0,0,0,0};
-        double[] outputs = {1,0};
-
-
-        Calculation.train(inputs, outputs, biasOcult, bias, true, true);
 
     }
 }
