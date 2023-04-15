@@ -119,6 +119,38 @@ public class NeuralNetwork {
         return x * (1 - x);
     }
 
+    public double[][] getHiddenWeights() {
+        return hiddenWeights;
+    }
+
+    public double[][] getOutputWeights() {
+        return outputWeights;
+    }
+
+    public double[] getBias1() {
+        return bias1;
+    }
+
+    public double[] getBias2() {
+        return bias2;
+    }
+
+    public void setHiddenWeights(double[][] hiddenWeights) {
+        this.hiddenWeights = hiddenWeights;
+    }
+
+    public void setOutputWeights(double[][] outputWeights) {
+        this.outputWeights = outputWeights;
+    }
+
+    public void setBias1(double[] bias1) {
+        this.bias1 = bias1;
+    }
+
+    public void setBias2(double[] bias2) {
+        this.bias2 = bias2;
+    }
+
     @Override
     public String toString() {
         return "NeuralNetwork{" +
