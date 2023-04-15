@@ -2,7 +2,7 @@ package br.com.andre.api.aplicacao;
 
 import br.com.andre.api.dominio.dtos.FrameDTO;
 import br.com.andre.data.dominio.Pixel;
-import br.com.andre.ml.aplicacao.NeuralNetwork;
+import br.com.andre.ml.NeuralNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 

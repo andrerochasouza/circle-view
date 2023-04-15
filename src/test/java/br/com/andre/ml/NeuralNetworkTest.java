@@ -1,4 +1,4 @@
-package br.com.andre.ml.aplicacao;
+package br.com.andre.ml;
 
 public class NeuralNetworkTest {
 
