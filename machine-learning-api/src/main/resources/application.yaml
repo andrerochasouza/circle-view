@@ -2,5 +2,4 @@ username: andre.rsouza
 password: andre.rsouza123
 port: 4567
 enableCors: false
-enableHealthCheck: true
 enableAuthentication: true

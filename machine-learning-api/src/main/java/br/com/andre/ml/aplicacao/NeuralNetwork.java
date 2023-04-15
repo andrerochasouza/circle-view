@@ -1,5 +1,7 @@
 package br.com.andre.ml.aplicacao;
 
+import java.util.Arrays;
+
 public class NeuralNetwork {
 
     private double[][] hiddenWeights;
@@ -109,38 +111,21 @@ public class NeuralNetwork {
         }
     }
 
-    public void print() {
-        System.out.println("Hidden Weights:");
-        for (int i = 0; i < hiddenWeights.length; i++) {
-            for (int j = 0; j < hiddenWeights[i].length; j++) {
-                System.out.print(hiddenWeights[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("Output Weights:");
-        for (int i = 0; i < outputWeights.length; i++) {
-            for (int j = 0; j < outputWeights[i].length; j++) {
-                System.out.print(outputWeights[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("Bias 1:");
-        for (int i = 0; i < bias1.length; i++) {
-            System.out.print(bias1[i] + " ");
-        }
-        System.out.println();
-        System.out.println("Bias 2:");
-        for (int i = 0; i < bias2.length; i++) {
-            System.out.print(bias2[i] + " ");
-        }
-        System.out.println();
-    }
-
     private double sigmoid(double x) {
         return 1 / (1 + Math.exp(-x));
     }
 
     private double sigmoidDerivative(double x) {
         return x * (1 - x);
+    }
+
+    @Override
+    public String toString() {
+        return "NeuralNetwork{" +
+                "hiddenWeights=" + Arrays.toString(hiddenWeights) +
+                ", outputWeights=" + Arrays.toString(outputWeights) +
+                ", bias1=" + Arrays.toString(bias1) +
+                ", bias2=" + Arrays.toString(bias2) +
+                '}';
     }
 }
