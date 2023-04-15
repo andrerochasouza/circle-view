@@ -4,8 +4,6 @@ import br.com.andre.api.dominio.ResponseResource;
 import br.com.andre.api.dominio.TypeStatus;
 import br.com.andre.api.dominio.dtos.FrameDTO;
 import br.com.andre.data.dominio.Pixel;
-import br.com.andre.ml.aplicacao.NeuralNetwork;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
