@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 public class MLController {
 
-    public static JsonObject trainAndReturnJsonNetworkWeights(ArrayList<FrameDTO> frames, ArrayList<double[]> targets,  int hiddenNodesSize) {
+    public static JsonObject trainAndReturnJsonNetworkWeights(ArrayList<FrameDTO> frames, ArrayList<double[]> targets,  int hiddenNodesSize, int epochs, double learningRate) {
 
         NeuralNetwork neuralNetwork = new NeuralNetwork(frames.get(0).getPixels().size(), hiddenNodesSize, 10);
         for (int i = 0; i < frames.size(); i++) {
             double[] inputs = frames.get(i).getPixels().stream().mapToDouble(Pixel::getValue).toArray();
             double[] target = targets.get(i);
 
-            neuralNetwork.train(inputs, target, 0.1, 100);
+            neuralNetwork.train(inputs, target, learningRate, epochs);
         }
 
         double[][] hiddenWeights = neuralNetwork.getHiddenWeights();

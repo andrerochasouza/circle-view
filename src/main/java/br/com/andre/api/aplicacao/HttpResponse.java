@@ -31,10 +31,13 @@ public class HttpResponse {
         }
 
         String body = req.body();
+        int hiddenNodesSize = Integer.parseInt(req.queryParams("hiddenNodesSize"));
+        int epochs = Integer.parseInt(req.queryParams("epochs"));
+        double learningRate = Double.parseDouble(req.queryParams("learningRate"));
         ArrayList<FrameDTO> frames = convertJsonToListFrameDTO(body);
         ArrayList<double[]> targets = convertJsonToListTargetsDTO(body);
 
-        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, 10);
+        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, hiddenNodesSize, epochs, learningRate);
 
         return ResponseResource.of(res, networkWeights, TypeStatus.OK);
     }
