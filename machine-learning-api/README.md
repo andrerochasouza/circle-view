@@ -1,17 +1,16 @@
 # CIRCLE VIEW
 
-**Circle View** é um projeto que oferece uma API em Java para realizar feedforward e backpropagation em modelos de machine learning treinados. A API recebe solicitações com dados de entrada em formato JSON e retorna resultados de feedforward e backpropagation.
-
-# Arquitetura
+**Circle View** é um projeto que oferece uma API em Java que recebe solicitações com dados de entrada em formato JSON e retorna resultados de treinos/avaliações no modelo de machine learning. 
+## Arquitetura
 O projeto está dividido em três camadas:
 
-**Camada de apresentação:** responsável por receber as solicitações HTTP e enviar as respostas correspondentes. Nesse caso, é implementado um servidor HTTP em Java que usa a biblioteca Spark para lidar com as solicitações e respostas.
+**Camada de controle:** responsável por receber as solicitações HTTP e enviar as respostas correspondentes. Nesse caso, é implementado um servidor HTTP em Java que usa a biblioteca Spark para lidar com as solicitações e respostas.
 
-**Camada de Machine Learning:** responsável por executar o feedforward e backpropagation nos modelos de machine learning treinados. Nesse caso, é implementado um modelo de rede neural artificial simples com uma camada de entrada, uma camada oculta e uma camada de saída (Camadas Ocultas/Saidas limitados a 10 nós).
+**Camada de ML:** responsável por executar o feedforward e backpropagation nos modelos de machine learning treinados. Nesse caso, é implementado um modelo de rede neural artificial simples com uma camada de entrada, uma camada oculta e uma camada de saída (Camadas Ocultas/Saidas limitados a 10 nós).
 
 **Camada de dados:** responsável por armazenar os modelos de machine learning treinados e os dados de entrada. Nesse caso, os dados de entrada são passados diretamente para a API em formato JSON. Os modelos treinados são armazenados em disco e carregados na memória quando a API é iniciada.
 
-# Como usar
+## Como usar
 Para executar a API, é necessário ter o Java 11 ou superior instalado na máquina.
 
 **Clone o repositório do projeto:**
@@ -39,7 +38,7 @@ java -jar target/circle-view-1.0.0.jar
 
 Você pode testar as solicitações usando um cliente HTTP, como o cURL ou o Postman.
 
-# GET /healthcheck
+## GET /healthcheck
 Retorna um status HTTP 200 OK se o servidor estiver em execução e saudável.
 
 Exemplo de resposta:
@@ -51,7 +50,7 @@ Body: {
 }
 ```
 
-# POST /feedforward
+## POST /feedforward
 Executa uma passagem de **feedforward** no modelo de machine learning e retorna as saídas correspondentes. O corpo da solicitação deve incluir os dados de entrada em formato JSON.
 
 **Exemplo de solicitação:**
@@ -74,7 +73,7 @@ Body: {
 }
 ```
 
-# POST /train
+## POST /train
 Executa um ciclo de **treinamento** no modelo de machine learning com os dados de entrada fornecidos e retorna o erro de treinamento correspondente. O corpo da solicitação deve incluir os dados de entrada e saída esperados em formato JSON.
 
 **Exemplo de solicitação:**
@@ -98,5 +97,5 @@ Body: {
 }
 ```
 
-# Licença
+## Licença
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE para obter mais informações.

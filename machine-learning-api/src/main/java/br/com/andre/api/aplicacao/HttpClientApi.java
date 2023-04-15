@@ -2,11 +2,8 @@ package br.com.andre.api.aplicacao;
 
 import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
-import spark.utils.IOUtils;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.log.Log;
 import java.util.Base64;
 
 import static spark.Spark.*;
@@ -14,8 +11,9 @@ import static spark.Spark.*;
 public class HttpClientApi {
 
     private static final Gson gson = new Gson();
+    private static final Logger log = Logger.getLogger(HttpClientApi.class);
 
-    public static void initServer(int port, boolean enableHealthCheck, boolean enableCORS, boolean enableAuth) {
+    public static void initServer(int port, boolean enableCORS, boolean enableAuth) {
 
 
         // Conexão com o banco de dados
@@ -72,22 +70,13 @@ public class HttpClientApi {
 
         });
 
-        // HealthCheck
-        if(enableHealthCheck){
-            get("/healthcheck", (req, res) -> {
-                res.status(200);
-                return " ---------- HealthCheck - OK (EnableAuth: " + enableAuth + ") (EnableCORS: " + enableCORS + ") ---------- ";
-            });
-            System.out.println(HealthCheck.healthCheckByHttpUrl(port, enableAuth));
-        }
-
         // Mapeamento de Paths do API
         path("/api", () -> {
-            get("", (req, res) -> HttpResponse.getFirstFrame(req, res), gson::toJson);
+            get("/healthcheck", (req, res) -> HttpResponse.getHealthCheck(req, res), gson::toJson);
             post("/train", (req, res) -> HttpResponse.newTrain(req, res), gson::toJson);
             post("/feedfoward", (req, res) -> HttpResponse.newFeedfoward(req, res), gson::toJson);
         });
 
-        System.out.println("Servidor rodando na porta " + port);
+        log.info("SERVER INICIADO NA PORTA - " + port);
     }
 }
