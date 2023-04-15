@@ -8,15 +8,11 @@ import java.util.ArrayList;
 public class FrameDTO {
 
     private int id;
-    private ArrayList<PixelDTO> pixels;
+    private ArrayList<Pixel> pixels;
 
-    public FrameDTO(int id, ArrayList<PixelDTO> pixels) {
+    public FrameDTO(int id, ArrayList<Pixel> pixels) {
         this.id = id;
         this.pixels = pixels;
-    }
-
-    public static FrameDTO fromJson(String json) {
-        return GsonUtil.fromJson(json, FrameDTO.class);
     }
 
     public int getId() {
@@ -27,11 +23,11 @@ public class FrameDTO {
         this.id = id;
     }
 
-    public ArrayList<PixelDTO> getPixels() {
+    public ArrayList<Pixel> getPixels() {
         return pixels;
     }
 
-    public void setPixels(ArrayList<PixelDTO> pixels) {
+    public void setPixels(ArrayList<Pixel> pixels) {
         this.pixels = pixels;
     }
 }
