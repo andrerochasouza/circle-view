@@ -4,7 +4,7 @@
 ## Arquitetura
 O projeto está dividido em três camadas:
 
-**Camada de controle:** responsável por receber as solicitações HTTP e enviar as respostas correspondentes. Nesse caso, é implementado um servidor HTTP em Java que usa a biblioteca Spark para lidar com as solicitações e respostas.
+**Camada de API:** responsável por receber as solicitações HTTP e enviar as respostas correspondentes. Nesse caso, é implementado um servidor HTTP em Java que usa a biblioteca Spark para lidar com as solicitações e respostas.
 
 **Camada de ML:** responsável por executar o feedforward e backpropagation nos modelos de machine learning treinados. Nesse caso, é implementado um modelo de rede neural artificial simples com uma camada de entrada, uma camada oculta e uma camada de saída (Camadas Ocultas/Saidas limitados a 10 nós).
 
