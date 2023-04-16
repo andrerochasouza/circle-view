@@ -12,7 +12,12 @@ public class NeuralNetwork {
     private double[] bias2;
     private double[] outputs;
 
+    public NeuralNetwork() {
+        this.uuid = UUID.randomUUID();
+    }
+
     public NeuralNetwork(int numInputs, int numHidden, int numOutputs) {
+        this.uuid = UUID.randomUUID();
         hiddenWeights = new double[numHidden][numInputs];
         outputWeights = new double[numOutputs][numHidden];
         bias1 = new double[numHidden];

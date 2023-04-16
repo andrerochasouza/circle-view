@@ -12,7 +12,8 @@ public enum TypeStatus {
     NOT_IMPLEMENTED("Não implementado", 501),
     BAD_GATEWAY("Gateway inválido", 502),
     SUCESS("Sucesso", 201),
-    OK("Ok", 200);
+    OK("Ok", 200),
+    DELETE("Deletado", 204);
 
 
     private String message;

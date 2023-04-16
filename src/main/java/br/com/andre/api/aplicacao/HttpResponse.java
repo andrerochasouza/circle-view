@@ -3,6 +3,7 @@ package br.com.andre.api.aplicacao;
 import br.com.andre.api.dominio.ResponseResource;
 import br.com.andre.api.dominio.TypeStatus;
 import br.com.andre.api.dominio.dtos.FrameDTO;
+import br.com.andre.data.aplicacao.SQLiteConnection;
 import br.com.andre.data.dominio.Pixel;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,15 +12,24 @@ import org.apache.log4j.Logger;
 import spark.Request;
 import spark.Response;
 
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class HttpResponse {
 
     private final static Logger log = Logger.getLogger(HttpResponse.class);
 
     public static ResponseResource getHealthCheck(Request req, Response res) {
+
+        boolean isConnectionOpen = SQLiteConnection.getInstance().testConnection();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("Status SQLite", isConnectionOpen ? "OK" : "ERRO");
+        jsonObject.addProperty("Endpoint Health Check", "OK");
+
         log.info("Health Check realizado com sucesso!");
-        return ResponseResource.of(res, "OK", TypeStatus.OK);
+        return ResponseResource.of(res, jsonObject, TypeStatus.OK);
     }
 
     public static ResponseResource newTrain(Request req, Response res) {
@@ -35,10 +45,11 @@ public class HttpResponse {
         int hiddenNodesSize = Integer.parseInt(req.queryParams("hiddenNodesSize"));
         int epochs = Integer.parseInt(req.queryParams("epochs"));
         double learningRate = Double.parseDouble(req.queryParams("learningRate"));
+        UUID uuid = req.queryParams("uuid") != null ? UUID.fromString(req.queryParams("uuid")) : null;
         ArrayList<FrameDTO> frames = convertJsonToListFrameDTO(body);
         ArrayList<double[]> targets = convertJsonToListTargetsDTO(body);
 
-        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, hiddenNodesSize, epochs, learningRate);
+        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, hiddenNodesSize, epochs, learningRate, uuid);
 
         log.info("Treinamento realizado com sucesso!");
         return ResponseResource.of(res, networkWeights, TypeStatus.OK);
@@ -46,19 +57,51 @@ public class HttpResponse {
 
     public static ResponseResource newFeedfoward(Request req, Response res) {
 
-        if (req.body().isEmpty() || req.queryParams("hiddenNodesSize").isEmpty()) {
+        if (req.body().isEmpty() || req.queryParams("uuid").isEmpty()) {
             return ResponseResource.ofError(res, "Requisição inválida!", TypeStatus.BAD_REQUEST);
         }
 
         String body = req.body();
-        int hiddenNodesSize = Integer.parseInt(req.queryParams("hiddenNodesSize"));
+        UUID uuid = UUID.fromString(req.queryParams("uuid"));
         FrameDTO frame = convertJsonToFrameDTO(body);
 
-        JsonObject outputsJson = MLController.feedfowardAndReturnJsonOutputs(frame, hiddenNodesSize);
+        JsonObject outputsJson = MLController.feedfowardAndReturnJsonOutputs(frame, uuid);
 
         log.info("Feedfoward realizado com sucesso!");
         return ResponseResource.of(res, outputsJson, TypeStatus.OK);
 
+    }
+
+    public static ResponseResource getAllUUIDs(Request req, Response res) {
+        JsonObject uuidsJson = MLController.getAllUUIDs();
+        log.info("Listagem de UUIDs realizada com sucesso!");
+        return ResponseResource.of(res, uuidsJson, TypeStatus.OK);
+    }
+
+    public static ResponseResource getNeuralNetworkByUUID(Request req, Response res) {
+        UUID uuid = UUID.fromString(req.params("uuid"));
+        JsonObject neuralNetworkJson = MLController.getNeuralNetworkByUUID(uuid);
+
+        if(neuralNetworkJson == null){
+            log.info("UUID não encontrado!");
+            return ResponseResource.ofError(res, "UUID não encontrado!", TypeStatus.NOT_FOUND);
+        }
+
+        log.info("Busca de rede neural por UUID realizada com sucesso!");
+        return ResponseResource.of(res, neuralNetworkJson, TypeStatus.OK);
+    }
+
+    public static ResponseResource deleteNeuralNetworkByUUID(Request req, Response res) {
+        UUID uuid = UUID.fromString(req.params("uuid"));
+        JsonObject uuidJson = MLController.deleteNeuralNetworkByUUID(uuid);
+
+        if(uuidJson == null){
+            log.info("UUID não encontrado ou Neural Network já está deletado");
+            return ResponseResource.ofError(res, "UUID não encontrado ou Neural Network já está deletado", TypeStatus.NOT_FOUND);
+        }
+
+        log.info("Exclusão de rede neural por UUID realizada com sucesso!");
+        return ResponseResource.of(res, uuidJson, TypeStatus.DELETE);
     }
 
 
