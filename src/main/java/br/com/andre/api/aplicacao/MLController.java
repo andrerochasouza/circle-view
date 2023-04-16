@@ -24,14 +24,29 @@ public class MLController {
         double[][] outputWeights = neuralNetwork.getOutputWeights();
         double[] bias1 = neuralNetwork.getBias1();
         double[] bias2 = neuralNetwork.getBias2();
+        double[] outputs = neuralNetwork.getOutputs();
 
         JsonObject networkWeights = new JsonObject();
         networkWeights.add("hiddenWeights", new Gson().toJsonTree(hiddenWeights));
         networkWeights.add("outputWeights", new Gson().toJsonTree(outputWeights));
         networkWeights.add("bias1", new Gson().toJsonTree(bias1));
         networkWeights.add("bias2", new Gson().toJsonTree(bias2));
+        networkWeights.add("outputs", new Gson().toJsonTree(outputs));
 
         return networkWeights;
+    }
+
+    public static JsonObject feedfowardAndReturnJsonOutputs(FrameDTO frame, int hiddenNodesSize) {
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(frame.getPixels().size(), hiddenNodesSize, 10);
+
+        double[] inputs = frame.getPixels().stream().mapToDouble(Pixel::getValue).toArray();
+        double[] outputs = neuralNetwork.feedforward(inputs);
+
+        JsonObject outputsJson = new JsonObject();
+        outputsJson.add("outputs", new Gson().toJsonTree(outputs));
+
+        return outputsJson;
     }
 
 }

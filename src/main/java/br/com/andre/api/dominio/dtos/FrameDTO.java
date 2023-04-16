@@ -1,7 +1,6 @@
 package br.com.andre.api.dominio.dtos;
 
 import br.com.andre.data.dominio.Pixel;
-import br.com.andre.util.GsonUtil;
 
 import java.util.ArrayList;
 

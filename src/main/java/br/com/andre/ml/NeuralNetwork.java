@@ -1,13 +1,16 @@
 package br.com.andre.ml;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class NeuralNetwork {
 
+    private UUID uuid;
     private double[][] hiddenWeights;
     private double[][] outputWeights;
     private double[] bias1;
     private double[] bias2;
+    private double[] outputs;
 
     public NeuralNetwork(int numInputs, int numHidden, int numOutputs) {
         hiddenWeights = new double[numHidden][numInputs];
@@ -52,6 +55,7 @@ public class NeuralNetwork {
             outputNodes[i] = sigmoid(sum + bias2[i]);
         }
 
+        this.outputs = outputNodes;
         return outputNodes;
     }
 
@@ -77,6 +81,8 @@ public class NeuralNetwork {
                 }
                 outputNodes[i] = sigmoid(sum + bias2[i]);
             }
+
+            this.outputs = outputNodes;
 
             // Calcula os deltas da camada de saída
             for (int i = 0; i < outputDeltas.length; i++) {
@@ -135,6 +141,14 @@ public class NeuralNetwork {
         return bias2;
     }
 
+    public double[] getOutputs() {
+        return outputs;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
     public void setHiddenWeights(double[][] hiddenWeights) {
         this.hiddenWeights = hiddenWeights;
     }
@@ -151,13 +165,23 @@ public class NeuralNetwork {
         this.bias2 = bias2;
     }
 
+    public void setOutputs(double[] outputs) {
+        this.outputs = outputs;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return "NeuralNetwork{" +
-                "hiddenWeights=" + Arrays.toString(hiddenWeights) +
+                "uuid=" + uuid +
+                ", hiddenWeights=" + Arrays.toString(hiddenWeights) +
                 ", outputWeights=" + Arrays.toString(outputWeights) +
                 ", bias1=" + Arrays.toString(bias1) +
                 ", bias2=" + Arrays.toString(bias2) +
+                ", outputs=" + Arrays.toString(outputs) +
                 '}';
     }
 }

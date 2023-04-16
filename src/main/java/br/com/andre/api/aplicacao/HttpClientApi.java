@@ -1,9 +1,9 @@
 package br.com.andre.api.aplicacao;
 
+import br.com.andre.data.aplicacao.SQLiteConnection;
 import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.log.Log;
 import java.util.Base64;
 
 import static spark.Spark.*;
@@ -15,12 +15,11 @@ public class HttpClientApi {
 
     public static void initServer(int port, boolean enableCORS, boolean enableAuth) {
 
-
-        // Conexão com o banco de dados
-        // if(!SQLiteConnection.getInstance().testConnection()){
-        //     System.out.println("Erro ao conectar com o banco de dados - SQLiteConnection");
-        //     System.exit(0);
-        // }
+         // Conexão com o banco de dados
+         if(!SQLiteConnection.getInstance().testConnection()){
+             log.info("Erro ao conectar com o banco de dados");
+             System.exit(0);
+         }
 
         // Configurações do Spark
         port(port);
