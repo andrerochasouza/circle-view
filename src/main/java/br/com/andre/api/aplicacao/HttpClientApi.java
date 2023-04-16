@@ -74,6 +74,11 @@ public class HttpClientApi {
             get("/healthcheck", (req, res) -> HttpResponse.getHealthCheck(req, res), gson::toJson);
             post("/train", (req, res) -> HttpResponse.newTrain(req, res), gson::toJson);
             post("/feedfoward", (req, res) -> HttpResponse.newFeedfoward(req, res), gson::toJson);
+            path("/neuralnetwork", () -> {
+                get("/list", (req, res) -> HttpResponse.getAllUUIDs(req, res), gson::toJson);
+                get("/list/:uuid", (req, res) -> HttpResponse.getNeuralNetworkByUUID(req, res), gson::toJson);
+                delete("/delete/:uuid", (req, res) -> HttpResponse.deleteNeuralNetworkByUUID(req, res), gson::toJson);
+            });
         });
 
         log.info("SERVER INICIADO NA PORTA - " + port);
