@@ -64,4 +64,8 @@ export class FrameComponent implements OnInit {
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }
+
+  captureImage(): ImageData {
+    return this.ctx.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  }
 }
