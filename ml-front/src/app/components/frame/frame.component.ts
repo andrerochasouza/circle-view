@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import * as p5 from 'p5';
 
 @Component({
   selector: 'app-frame',
@@ -6,66 +7,75 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./frame.component.css']
 })
 export class FrameComponent implements OnInit {
-
-  @ViewChild('canvas', { static: true })
-  canvas!: ElementRef<HTMLCanvasElement>;
-
-  private ctx!: CanvasRenderingContext2D;
-  private drawing = false;
-  private lastX = 0;
-  private lastY = 0;
+  private p5Instance: p5 | null = null;
+  public sketchId: string = `p5sketch-${Math.random().toString(36).substr(2, 9)}`;
+  @Input() enviarPixels?: (pixels: any) => void;
 
   ngOnInit() {
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    this.ctx.lineWidth = 20;
-    this.ctx.lineJoin = 'round';
-    this.ctx.lineCap = 'round';
-    this.ctx.strokeStyle = '#000000';
+    this.p5Instance = new p5(this.sketch);
   }
 
-  startDrawing(event: MouseEvent) {
-    this.drawing = true;
+  private sketch = (p: p5) => {
+    let canvas: p5.Renderer;
 
-    // Obtenha a posição absoluta do canvas na tela
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    p.setup = () => {
+      canvas = p.createCanvas(280, 280);
+      canvas.parent(this.sketchId);
+      p.background(255);
+    };
 
-    // Calcule as coordenadas relativas ao canvas usando a posição absoluta
-    this.lastX = event.clientX - rect.left;
-    this.lastY = event.clientY - rect.top;
+    p.draw = () => {
+      if (p.mouseIsPressed) {
+        p.strokeWeight(24);
+        p.line(p.mouseX, p.mouseY, p.pmouseX, p.pmouseY);
+      }
+    };
+
+    this.enviarPixels = (pixels: any) => {};
+
+    p.keyReleased = () => {
+      if (p.keyCode === p.ENTER || p.keyCode === p.RETURN) {
+        this.enviarDesenho();
+        p.background(255);
+      }
+    };
   }
 
-  draw(event: MouseEvent) {
-    if (!this.drawing) {
-      return;
+  limparCanvas() {
+    if (this.p5Instance) {
+      this.p5Instance.background(255);
     }
-
-    // Obtenha a posição absoluta do canvas na tela
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
-
-    // Calcule as coordenadas relativas ao canvas usando a posição absoluta
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.lastX, this.lastY);
-    this.ctx.lineTo(x, y);
-    this.ctx.stroke();
-
-    this.lastX = x;
-    this.lastY = y;
   }
 
-  endDrawing() {
-    this.drawing = false;
-    this.lastX = 0;
-    this.lastY = 0;
-  }
+  enviarDesenho(): number[] {
+    if (this.enviarPixels && this.p5Instance) {
+      // Obter a imagem original
+      const originalImage = this.p5Instance.get(0, 0, this.p5Instance.width, this.p5Instance.height);
+  
+      // Redimensionar a imagem para 28x28 pixels
+      const resizedImage = this.p5Instance.createImage(28, 28);
+      resizedImage.copy(originalImage, 0, 0, originalImage.width, originalImage.height, 0, 0, 28, 28);
+  
+      // Obter os pixels da imagem redimensionada
+      resizedImage.loadPixels();
+      const pixelArray: number[] = [];
+  
+      // Transforma os valores RGB em escala de cinza
+      for (let i = 0; i < resizedImage.pixels.length; i += 4) {
+        const r = resizedImage.pixels[i];
+        const g = resizedImage.pixels[i + 1];
+        const b = resizedImage.pixels[i + 2];
+        const grayValue = (r + g + b) / 3;
+  
+        // Normaliza o valor entre 0 e 1 e adiciona ao array
+        pixelArray.push(grayValue / 255);
+      }
 
-  clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-  }
-
-  captureImage(): ImageData {
-    return this.ctx.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      console.log(pixelArray);
+  
+      return pixelArray;
+    }
+  
+    return [];
   }
 }

@@ -18,6 +18,9 @@ export class HomeComponent {
 
   realizarFeedfoward(): void{
 
+    this.frameComponent.enviarDesenho();
+    this.frameComponent.limparCanvas();
+    
   }
 
   routeTrainPage(): void{
@@ -25,6 +28,6 @@ export class HomeComponent {
   }
 
   limparTela(): void{
-    this.frameComponent.clearCanvas();
+    this.frameComponent.limparCanvas();
   }
 }
