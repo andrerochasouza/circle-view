@@ -8,8 +8,22 @@
         <po-container class="po-xl-12 po-lg-12 po-md-12">
             <app-frame class="po-xl-9 po-lg-9 po-md-9 po-sm-9 po-text-center"></app-frame>
             <po-button class="po-xl-3 po-lg-3" p-label="Limpar" (p-click)="limparTela()" p-type="primary" p-icon="po-icon po-icon-grid"></po-button>
-            <po-button class="po-xl-3 po-lg-3" p-label="Treino" (p-click)="routeTrainPage()" p-type="primary" p-icon="po-icon po-icon-grid"></po-button>
-            <po-button class="po-xl-3 po-lg-3" p-label="Feedfoward" (p-click)="realizarFeedfoward()" p-type="primary" p-icon="po-icon po-icon-last-page"></po-button>
+            <po-button class="po-xl-3 po-lg-3" p-label="Treino" (p-click)="realizarTreino()" p-type="primary" p-icon="po-icon po-icon-grid"></po-button>
+            <po-button class="po-xl-3 po-lg-3" p-label="Feedfoward" (p-click)="realizarFeedfowardByUUID()" p-type="primary" p-icon="po-icon po-icon-last-page"></po-button>
         </po-container>
+        <table>
+            <thead>
+              <tr>
+                <th>Indice</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of arrayTarget; let i = index">
+                <td>{{ i }}</td>
+                <td><input type="number" [value]="item" (input)="onItemChange($event, i)"></td>
+              </tr>
+            </tbody>
+          </table>
     </div>
 </po-page-default>
