@@ -101,7 +101,7 @@ public class HttpResponse {
         }
 
         log.info("Exclusão de rede neural por UUID realizada com sucesso!");
-        return ResponseResource.of(res, uuidJson, TypeStatus.DELETE);
+        return ResponseResource.of(res, uuidJson, TypeStatus.OK);
     }
 
 
@@ -121,9 +121,7 @@ public class HttpResponse {
             for (int j = 0; j < pixelsJsonArray.size(); j++) {
                 JsonObject pixelJson = pixelsJsonArray.get(j).getAsJsonObject();
                 double value = pixelJson.get("value").getAsDouble();
-                int x = pixelJson.get("x").getAsInt();
-                int y = pixelJson.get("y").getAsInt();
-                Pixel pixel = new Pixel(value, x, y);
+                Pixel pixel = new Pixel(value);
                 pixels.add(pixel);
             }
 
@@ -165,9 +163,7 @@ public class HttpResponse {
         for (int j = 0; j < pixelsJsonArray.size(); j++) {
             JsonObject pixelJson = pixelsJsonArray.get(j).getAsJsonObject();
             double value = pixelJson.get("value").getAsDouble();
-            int x = pixelJson.get("x").getAsInt();
-            int y = pixelJson.get("y").getAsInt();
-            Pixel pixel = new Pixel(value, x, y);
+            Pixel pixel = new Pixel(value);
             pixels.add(pixel);
         }
 

@@ -10,6 +10,7 @@ import { PoModule } from '@po-ui/ng-components';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AppRoutingModule } from './app-routing.module';
     CommonModule,
     RouterModule.forRoot([]),
     HttpClientModule,
-    PoModule
+    PoModule,
+    FormsModule
   ],
   providers: [
     {

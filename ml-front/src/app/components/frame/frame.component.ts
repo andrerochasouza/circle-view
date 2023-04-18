@@ -35,7 +35,7 @@ export class FrameComponent implements OnInit {
 
     p.keyReleased = () => {
       if (p.keyCode === p.ENTER || p.keyCode === p.RETURN) {
-        this.enviarDesenho();
+        this.getDesenho();
         p.background(255);
       }
     };
@@ -47,7 +47,7 @@ export class FrameComponent implements OnInit {
     }
   }
 
-  enviarDesenho(): number[] {
+  getDesenho(): number[] {
     if (this.enviarPixels && this.p5Instance) {
       // Obter a imagem original
       const originalImage = this.p5Instance.get(0, 0, this.p5Instance.width, this.p5Instance.height);

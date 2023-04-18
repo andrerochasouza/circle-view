@@ -4,6 +4,9 @@ import br.com.andre.data.aplicacao.SQLiteConnection;
 import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import spark.Filter;
+import spark.Spark;
+
 import java.util.Base64;
 
 import static spark.Spark.*;
@@ -25,21 +28,11 @@ public class HttpClientApi {
         port(port);
         threadPool(8, 2, 30000);
 
-        // CORS e Headers de Segurança && Autenticação
-        before("/*", (req, res) -> {
+        // CORS e Headers de Segurança
+        if(enableCORS) CorsFilter.apply();
 
-            // CORS e Headers de Segurança
-            if(enableCORS){
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-                res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin,");
-                res.header("X-Frame-Options", "SAMEORIGIN");
-                res.header("X-XSS-Protection", "1; mode=block");
-                res.header("X-Content-Type-Options", "nosniff");
-                res.header("Content-Security-Policy", "default-src 'self'");
-                res.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-                res.header("Referrer-Policy", "no-referrer-when-downgrade");
-            }
+        // Autenticação
+        before("/*", (req, res) -> {
 
             if(enableAuth){
                 // basic auth
