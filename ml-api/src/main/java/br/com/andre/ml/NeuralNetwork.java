@@ -64,6 +64,7 @@ public class NeuralNetwork {
         return outputNodes;
     }
 
+
     public void train(double[] inputs, double[] target, double learningRate, int epochs) {
         for (int epoch = 0; epoch < epochs; epoch++) {
             double[] hiddenNodes = new double[hiddenWeights.length];

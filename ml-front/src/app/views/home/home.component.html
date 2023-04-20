@@ -11,19 +11,36 @@
             <po-button class="po-xl-3 po-lg-3" p-label="Treino" (p-click)="realizarTreino()" p-type="primary" p-icon="po-icon po-icon-grid"></po-button>
             <po-button class="po-xl-3 po-lg-3" p-label="Feedfoward" (p-click)="realizarFeedfowardByUUID()" p-type="primary" p-icon="po-icon po-icon-last-page"></po-button>
         </po-container>
-        <table>
-            <thead>
-              <tr>
-                <th>Indice</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of arrayTarget; let i = index">
-                <td>{{ i }}</td>
-                <td><input type="number" [value]="item" (input)="onItemChange($event, i)"></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="radio-group">
+          <input type="radio" id="0" name="numero" value="0" [(ngModel)]="numeroSelecionado">
+          <label for="0">0</label>
+        
+          <input type="radio" id="1" name="numero" value="1" [(ngModel)]="numeroSelecionado">
+          <label for="1">1</label>
+        
+          <input type="radio" id="2" name="numero" value="2" [(ngModel)]="numeroSelecionado">
+          <label for="2">2</label>
+        
+          <input type="radio" id="3" name="numero" value="3" [(ngModel)]="numeroSelecionado">
+          <label for="3">3</label>
+        
+          <input type="radio" id="4" name="numero" value="4" [(ngModel)]="numeroSelecionado">
+          <label for="4">4</label>
+        
+          <input type="radio" id="5" name="numero" value="5" [(ngModel)]="numeroSelecionado">
+          <label for="5">5</label>
+        
+          <input type="radio" id="6" name="numero" value="6" [(ngModel)]="numeroSelecionado">
+          <label for="6">6</label>
+        
+          <input type="radio" id="7" name="numero" value="7" [(ngModel)]="numeroSelecionado">
+          <label for="7">7</label>
+        
+          <input type="radio" id="8" name="numero" value="8" [(ngModel)]="numeroSelecionado">
+          <label for="8">8</label>
+        
+          <input type="radio" id="9" name="numero" value="9" [(ngModel)]="numeroSelecionado">
+          <label for="9">9</label>
+        </div>
     </div>
 </po-page-default>

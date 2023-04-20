@@ -1,34 +1,22 @@
 
-export interface ResponseFeedFoward{
-    resource: ResourceFeedfoward;
+export interface Response <T>{
+    resource: T;
     messageStatus: string;
     status: number;
 }
 
-export interface ResponseTrain{
-    resource: ResourceTrain;
+export interface ResponseError{
+    messageError: string;
     messageStatus: string;
     status: number;
 }
 
-export interface ResponseList{
-    resource: ResourceUUIDs;
-    messageStatus: string;
-    status: number;
-}
-
-export interface ResponseNeuralNetwork{
-    resource: ResourceNeuralNetwork;
-    messageStatus: string;
-    status: number;
-}
-
-interface ResourceFeedfoward{
+export interface ResponseFeedfoward{
     uuid: string;
     outputs: number[];
 }
 
-interface ResourceTrain{
+export interface ResponseTrain{
     uuid: string;
     outputs: number[];
     bias1: number[];
@@ -37,11 +25,11 @@ interface ResourceTrain{
     outputWeights: number[][];
 }
 
-interface ResourceUUIDs{
+export interface ResponseUUIDs{
     uuids: string[];
 }
 
-interface ResourceNeuralNetwork{
+export interface ResponseNeuralNetwork{
     uuid: string;
     hiddenWeights: number[][];
     outputWeights: number[][];
