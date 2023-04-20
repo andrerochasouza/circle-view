@@ -68,7 +68,7 @@ export class FrameComponent implements OnInit {
         const grayValue = (r + g + b) / 3;
   
         // Normaliza o valor entre 0 e 1 e adiciona ao array
-        pixelArray.push(grayValue / 255);
+        pixelArray.push(1 - grayValue / 255);
       }
 
       console.log(pixelArray);
