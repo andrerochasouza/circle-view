@@ -23,18 +23,20 @@ public class NeuralNetwork {
         bias1 = new double[numHidden];
         bias2 = new double[numOutputs];
 
-        // Inicializa os pesos com valores aleatórios entre 0 e 1
+        // Inicialização de pesos utilizando a técnica de LeCun
+        double scale = Math.sqrt(1.0 / numInputs);
         for (int i = 0; i < numHidden; i++) {
             for (int j = 0; j < numInputs; j++) {
-                hiddenWeights[i][j] = Math.random();
+                hiddenWeights[i][j] = Math.random() * scale;
             }
-            bias1[i] = Math.random();
+            bias1[i] = Math.random() * scale;
         }
+        scale = Math.sqrt(1.0 / numHidden);
         for (int i = 0; i < numOutputs; i++) {
             for (int j = 0; j < numHidden; j++) {
-                outputWeights[i][j] = Math.random();
+                outputWeights[i][j] = Math.random() * scale;
             }
-            bias2[i] = Math.random();
+            bias2[i] = Math.random() * scale;
         }
     }
 

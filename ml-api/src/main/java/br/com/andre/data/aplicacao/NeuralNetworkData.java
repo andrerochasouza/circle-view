@@ -101,6 +101,20 @@ public class NeuralNetworkData {
         }
     }
 
+    public void deleteAllNeuralNetworks(){
+        String sql = "DELETE FROM neural_networks";
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            log.info("Erro ao deletar todas as redes neurais");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public NeuralNetwork getNeuralNetwork(UUID uuid) {
         String sql = "SELECT * FROM neural_networks WHERE uuid = ?";
 

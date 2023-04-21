@@ -1,6 +1,0 @@
-username: andre.rsouza
-password: andre.rsouza123
-port: 4567
-enableCors: false
-enableAuthentication: true
-pathDB: C:/Users/1202000046/Desktop/java projects/circle-view/ml-api/src/main/resources

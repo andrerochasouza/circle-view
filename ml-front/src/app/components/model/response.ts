@@ -30,10 +30,12 @@ export interface ResponseUUIDs{
 }
 
 export interface ResponseNeuralNetwork{
-    uuid: string;
-    hiddenWeights: number[][];
-    outputWeights: number[][];
-    bias1: number[];
-    bias2: number[];
-    outputs: number[];
+    neuralNetwork: {
+        uuid: string;
+        hiddenWeights: number[][];
+        outputWeights: number[][];
+        bias1: number[];
+        bias2: number[];
+        outputs: number[];
+    }
 }
