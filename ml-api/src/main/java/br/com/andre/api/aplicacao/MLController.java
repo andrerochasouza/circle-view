@@ -3,10 +3,13 @@ package br.com.andre.api.aplicacao;
 import br.com.andre.api.dominio.dtos.FrameDTO;
 import br.com.andre.data.aplicacao.NeuralNetworkData;
 import br.com.andre.data.dominio.Pixel;
+import br.com.andre.ml.InternTrain;
 import br.com.andre.ml.NeuralNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,6 +17,42 @@ import java.util.UUID;
 public class MLController {
 
     private static NeuralNetworkData neuralNetworkData = new NeuralNetworkData();
+
+    public static JsonObject internTrainByMNISTAndReturnUUID() {
+
+        Instant start = Instant.now();
+        InternTrain internTrain = new InternTrain();
+        UUID uuid = internTrain.trainInternByMNISTAndSaveNN();
+
+        Instant end = Instant.now();
+        Duration duration = Duration.between(start, end);
+        long min = duration.toMinutes();
+        long seg = duration.minusMinutes(min).getSeconds();
+
+        JsonObject uuidJson = new JsonObject();
+        uuidJson.add("uuid", new Gson().toJsonTree(uuid));
+        uuidJson.add("tempo", new Gson().toJsonTree(String.format("Tempo de treinamento: %d minutos e %d segundos", min, seg)));
+
+        return uuidJson;
+    }
+
+    public static JsonObject internRetrainByMNISTAndReturnUUID(UUID uuid) {
+
+        Instant start = Instant.now();
+        InternTrain internTrain = new InternTrain();
+        internTrain.retrainInternByMNISTAndSaveNN(uuid);
+
+        Instant end = Instant.now();
+        Duration duration = Duration.between(start, end);
+        long min = duration.toMinutes();
+        long seg = duration.minusMinutes(min).getSeconds();
+
+        JsonObject uuidJson = new JsonObject();
+        uuidJson.add("uuid", new Gson().toJsonTree(uuid));
+        uuidJson.add("tempo", new Gson().toJsonTree(String.format("Tempo de treinamento: %d minutos e %d segundos", min, seg)));
+
+        return uuidJson;
+    }
 
     public static JsonObject trainAndReturnJsonNetworkWeights(ArrayList<FrameDTO> frames, ArrayList<double[]> targets,  int hiddenNodesSize, int epochs, double learningRate, UUID uuid) {
 
@@ -97,6 +136,13 @@ public class MLController {
         }
 
         neuralNetworkJson.add("neuralNetwork", new Gson().toJsonTree("Neural Network foi deletado - UUID: " + uuid.toString()));
+        return neuralNetworkJson;
+    }
+
+    public static JsonObject deleteAllNeuralNetworks(){
+        neuralNetworkData.deleteAllNeuralNetworks();
+        JsonObject neuralNetworkJson = new JsonObject();
+        neuralNetworkJson.add("neuralNetwork", new Gson().toJsonTree("Todas as Neural Networks foram deletadas"));
         return neuralNetworkJson;
     }
 

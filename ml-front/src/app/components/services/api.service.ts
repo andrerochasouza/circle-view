@@ -12,7 +12,7 @@ import { Response, ResponseTrain, ResponseUUIDs } from '../model/response';
 @Injectable({
   providedIn: 'root'
 })
-export class HomeService {
+export class ApiService {
 
   private readonly API = `${environment.api}`;
   private readonly USERNAME = 'andre.rsouza';
@@ -35,9 +35,5 @@ export class HomeService {
     }
     const url: string = `${this.API}/train?hiddenNodesSize=${hiddenNodesSize}&epochs=${epochs}&learningRate=${learningRate}&uuid=${uuid}`;
     return this.http.post<Response<ResponseTrain>>(url, trainBody);
-  }
-
-  getUUIDs(): Observable<Response<ResponseUUIDs>> {
-    return this.http.get<Response<ResponseUUIDs>>(`${this.API}/neuralnetwork/list`, { headers: this.AUTH });
   }
 }

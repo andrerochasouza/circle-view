@@ -11,6 +11,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
+import { PoFieldModule } from '@po-ui/ng-components';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     RouterModule.forRoot([]),
     HttpClientModule,
     PoModule,
-    FormsModule
+    FormsModule,
+    PoFieldModule
   ],
   providers: [
     {

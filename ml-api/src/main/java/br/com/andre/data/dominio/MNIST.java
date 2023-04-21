@@ -19,7 +19,9 @@ public class MNIST {
         MNIST mnist = new MNIST();
         try {
             mnist.loadTrainingData();
-            mnist.printFirstImagePixels(mnist.getLabels(), 0);
+            int random = (int) (Math.random() * 60000);
+            mnist.printFirstImagePixels(mnist.getLabels(), random);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,11 +72,11 @@ public class MNIST {
             for (int j = 0; j < 28; j++) {
                 double pixelValue = images[indexImage][i*28+j];
                 if (pixelValue > 0.9) {
-                    System.out.print("@");
+                    System.out.print(" @ ");
                 } else if (pixelValue > 0.1) {
-                    System.out.print("x");
+                    System.out.print(" x ");
                 } else {
-                    System.out.print("·");
+                    System.out.print(" · ");
                 }
             }
             if (i == 13) {

@@ -20,6 +20,28 @@ public class HttpResponse {
 
     private final static Logger log = Logger.getLogger(HttpResponse.class);
 
+    public static ResponseResource getTrainByMNIST(Request req, Response res){
+
+        JsonObject uuidJson =  MLController.internTrainByMNISTAndReturnUUID();
+
+        log.info("Treinamento realizado com sucesso!");
+        return ResponseResource.of(res, uuidJson, TypeStatus.OK);
+    }
+
+    public static ResponseResource getRetrainByMNIST(Request req, Response res){
+
+        if(req.queryParams("uuid").isEmpty()){
+            return ResponseResource.ofError(res, "Parâmetro 'uuid' não informado!", TypeStatus.BAD_REQUEST);
+        }
+
+        UUID uuid = UUID.fromString(req.queryParams("uuid"));
+
+        JsonObject uuidJson =  MLController.internRetrainByMNISTAndReturnUUID(uuid);
+
+        log.info("Retreinamento realizado com sucesso!");
+        return ResponseResource.of(res, uuidJson, TypeStatus.OK);
+    }
+
     public static ResponseResource getHealthCheck(Request req, Response res) {
 
         boolean isConnectionOpen = SQLiteConnection.getInstance().testConnection();
@@ -102,6 +124,13 @@ public class HttpResponse {
 
         log.info("Exclusão de rede neural por UUID realizada com sucesso!");
         return ResponseResource.of(res, uuidJson, TypeStatus.OK);
+    }
+
+    public static ResponseResource deleteAllNeuralNetworks(Request req, Response res) {
+        JsonObject uuidsJson = MLController.deleteAllNeuralNetworks();
+
+        log.info("Exclusão de todas as redes neurais realizada com sucesso!");
+        return ResponseResource.of(res, uuidsJson, TypeStatus.OK);
     }
 
 

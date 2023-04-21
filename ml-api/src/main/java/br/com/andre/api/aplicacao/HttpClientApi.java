@@ -64,6 +64,8 @@ public class HttpClientApi {
 
         // Mapeamento de Paths do API
         path("/api", () -> {
+            get("/trainbymnist", (req, res) -> HttpResponse.getTrainByMNIST(req, res), gson::toJson);
+            get("/retrainbymnist", (req, res) -> HttpResponse.getRetrainByMNIST(req, res), gson::toJson);
             get("/healthcheck", (req, res) -> HttpResponse.getHealthCheck(req, res), gson::toJson);
             post("/train", (req, res) -> HttpResponse.newTrain(req, res), gson::toJson);
             post("/feedfoward", (req, res) -> HttpResponse.newFeedfoward(req, res), gson::toJson);
@@ -71,6 +73,7 @@ public class HttpClientApi {
                 get("/list", (req, res) -> HttpResponse.getAllUUIDs(req, res), gson::toJson);
                 get("/list/:uuid", (req, res) -> HttpResponse.getNeuralNetworkByUUID(req, res), gson::toJson);
                 delete("/delete/:uuid", (req, res) -> HttpResponse.deleteNeuralNetworkByUUID(req, res), gson::toJson);
+                delete("/deleteAll", (req, res) -> HttpResponse.deleteAllNeuralNetworks(req, res), gson::toJson);
             });
         });
 

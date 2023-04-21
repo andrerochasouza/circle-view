@@ -1,13 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { FrameComponent } from 'src/app/components/frame/frame.component';
-import { HomeService } from '../../components/services/api.service';
+import { ApiService } from 'src/app/components/services/api.service';
+import { NeuralnetworkService } from 'src/app/components/services/neuralnetwork.service';
 import { Router } from '@angular/router';
-import { Observable, catchError, map, of } from 'rxjs';
-import { PoListBoxLiterals } from '@po-ui/ng-components/lib/components/po-listbox/interfaces/po-listbox-literals.interface';
 
 import { Pixel } from 'src/app/components/model/pixel';
 import { FeedfowardBody } from 'src/app/components/model/feedfowardBody';
-import { Response, ResponseFeedfoward, ResponseTrain, ResponseUUIDs } from 'src/app/components/model/response';
+import { Response, ResponseFeedfoward, ResponseNeuralNetwork, ResponseTrain, ResponseUUIDs } from 'src/app/components/model/response';
 import { TrainBody } from 'src/app/components/model/trainBody';
 
 
@@ -19,10 +18,11 @@ import { TrainBody } from 'src/app/components/model/trainBody';
 export class HomeComponent {
   @ViewChild(FrameComponent) frameComponent!: FrameComponent;
 
-  uuidInit: string = '';
+  listUUIDs: string[] = [];
+  uuidSelecionado: string = '';
   epochs: number = 1;
   learningRate: number = 0.1;
-  hiddenNodesSize: number = 10;
+  hiddenNodesSize: number = 0;
   arrayTarget: number[][] = [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                             [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
                             [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
@@ -33,21 +33,48 @@ export class HomeComponent {
                             [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
                             [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]];
-  numeroSelecionado: number = 0;
+  numeroSelecionadoTarget: number = 0;
+  neuralNetwork: ResponseNeuralNetwork = {
+    neuralNetwork: {
+      uuid: '',
+      hiddenWeights: [[]],
+      outputWeights: [[]],
+      bias1: [],
+      bias2: [],
+      outputs: []
+    }
+  };
+  output: number = 0;
+
 
   constructor(
-    private homeService: HomeService,
+    private apiService: ApiService,
+    private neuralnetworkService: NeuralnetworkService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.initUUID();
+    this.neuralnetworkService.getUUIDs().subscribe((response: Response<ResponseUUIDs>) => {
+      this.listUUIDs = response.resource.uuids;
+      }, (error: any) => {
+        console.log(error);
+      });
+  }
+
+  selecionaUUID(uuid: string) {
+    this.uuidSelecionado = uuid;
+    this.getNeuralNetworkByUUID(this.uuidSelecionado);
   }
 
   realizarFeedfowardByUUID(): void{
 
     const arrayImagem: number[] = this.frameComponent.getDesenho();
     this.limparTela();
+
+    if(this.uuidSelecionado == ''){
+      alert('O campo UUID está vazio, por favor selecione um modelo.');
+      return;
+    }
 
     const pixels: Pixel[] = [];
     arrayImagem.forEach((value: number) => {
@@ -60,13 +87,23 @@ export class HomeComponent {
         pixels: pixels
       }
     };
+
+    let outputs: number[] = [];
     
-    this.homeService.enviaImagemFeedfoward(feedfowardBody, this.uuidInit).subscribe((response: Response<ResponseFeedfoward>) => {
+    this.apiService.enviaImagemFeedfoward(feedfowardBody, this.uuidSelecionado).subscribe((response: Response<ResponseFeedfoward>) => {
       console.log(response);
+      outputs = response.resource.outputs;
+
+      const indexMaisProximo = outputs.reduce((indiceMaisProximo, numeroAtual, indiceAtual, array) => {
+        const diferencaAtual = Math.abs(1 - numeroAtual);
+        const diferencaMaisProxima = Math.abs(1 - array[indiceMaisProximo]);
+        return diferencaAtual < diferencaMaisProxima ? indiceAtual : indiceMaisProximo;
+      }, 0);
+      
+      this.output = indexMaisProximo;
     }, (error: any) => {
       console.log(error);
     });
-    
   }
 
   realizarTreino(): void{
@@ -74,6 +111,17 @@ export class HomeComponent {
     const arrayImagem: number[] = this.frameComponent.getDesenho();
     this.limparTela();
 
+    if(this.uuidSelecionado == ''){
+      this.hiddenNodesSize = 10;
+      alert('O campo UUID está vazio, será utilizado o valor padrão de 10 neurônios na camada oculta.');
+    } else {
+      this.hiddenNodesSize = this.neuralNetwork.neuralNetwork.hiddenWeights.length;
+      if(this.hiddenNodesSize == 0){
+        alert('O modelo selecionado não possui neurônios na camada oculta, por favor selecione outro modelo.');
+        return;
+      }
+    }
+  
     const pixels: Pixel[] = [];
     arrayImagem.forEach((value: number) => {
       pixels.push({value: value});
@@ -88,29 +136,28 @@ export class HomeComponent {
       ],
       targets: [
         {
-          arrayTarget: this.arrayTarget[this.numeroSelecionado]
+          arrayTarget: this.arrayTarget[this.numeroSelecionadoTarget]
         }
       ]
     };
 
-    this.homeService.enviaImagemTrain(trainBody, this.hiddenNodesSize, this.epochs, this.learningRate, this.uuidInit).subscribe((response: Response<ResponseTrain>) => {
+    this.apiService.enviaImagemTrain(trainBody, this.hiddenNodesSize, this.epochs, this.learningRate, this.uuidSelecionado).subscribe((response: Response<ResponseTrain>) => {
       console.log(response);
     }, (error: any) => {
       console.log(error);
     });
 
   }
+  
+  getNeuralNetworkByUUID(uuid: string): void{
+    this.neuralnetworkService.getNeuralNetworkByUUID(uuid).subscribe((response: Response<ResponseNeuralNetwork>) => {
+      this.neuralNetwork = response.resource;
+      }, (error: any) => {
+        console.log(error);
+      });
+  }
 
   limparTela(): void{
     this.frameComponent.limparCanvas();
-  }
-
-  initUUID(): void{
-    this.homeService.getUUIDs().subscribe((response: Response<ResponseUUIDs>) => {
-      this.uuidInit = response.resource.uuids[0];
-      console.log(this.uuidInit);
-    }, (error: any) => {
-      console.log(error);
-    });
   }
 }
