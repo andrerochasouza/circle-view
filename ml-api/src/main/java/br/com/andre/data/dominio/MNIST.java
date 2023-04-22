@@ -20,7 +20,7 @@ public class MNIST {
         try {
             mnist.loadTrainingData();
             int random = (int) (Math.random() * 60000);
-            mnist.printFirstImagePixels(mnist.getLabels(), random);
+            mnist.printImagemPixels( random);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class MNIST {
     }
 
 
-    public void printFirstImagePixels(double[][] labels, int indexImage) {
+    public void printImagemPixels(int indexImage) {
         for (int i = 0; i < 28; i++) {
             for (int j = 0; j < 28; j++) {
                 double pixelValue = images[indexImage][i*28+j];

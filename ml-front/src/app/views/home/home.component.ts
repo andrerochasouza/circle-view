@@ -20,8 +20,8 @@ export class HomeComponent {
 
   listUUIDs: string[] = [];
   uuidSelecionado: string = '';
-  epochs: number = 1;
-  learningRate: number = 0.1;
+  epochs: number = 1000;
+  learningRate: number = 0.3;
   hiddenNodesSize: number = 0;
   arrayTarget: number[][] = [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                             [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
