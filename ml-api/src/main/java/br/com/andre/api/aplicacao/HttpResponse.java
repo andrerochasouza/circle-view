@@ -57,21 +57,22 @@ public class HttpResponse {
     public static ResponseResource newTrain(Request req, Response res) {
 
         if (req.body().isEmpty()
-                || req.queryParams("hiddenNodesSize").isEmpty()
-                || req.queryParams("epochs").isEmpty()
+                || req.queryParams("hiddenNodesSize1").isEmpty()
+                || req.queryParams("hiddenNodesSize2").isEmpty()
                 || req.queryParams("learningRate").isEmpty()) {
             return ResponseResource.ofError(res, "Corpo da requisição está vazio!", TypeStatus.BAD_REQUEST);
         }
 
         String body = req.body();
-        int hiddenNodesSize = Integer.parseInt(req.queryParams("hiddenNodesSize"));
-        int epochs = Integer.parseInt(req.queryParams("epochs"));
+        int hiddenNodesSize1 = Integer.parseInt(req.queryParams("hiddenNodesSize1"));
+        int hiddenNodesSize2 = Integer.parseInt(req.queryParams("hiddenNodesSize2"));
         double learningRate = Double.parseDouble(req.queryParams("learningRate"));
         UUID uuid = req.queryParams("uuid") != null ? UUID.fromString(req.queryParams("uuid")) : null;
         ArrayList<FrameDTO> frames = convertJsonToListFrameDTO(body);
         ArrayList<double[]> targets = convertJsonToListTargetsDTO(body);
 
-        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, hiddenNodesSize, epochs, learningRate, uuid);
+        JsonObject networkWeights = MLController.trainAndReturnJsonNetworkWeights(frames, targets, hiddenNodesSize1, hiddenNodesSize2,
+                learningRate, uuid);
 
         log.info("Treinamento realizado com sucesso!");
         return ResponseResource.of(res, networkWeights, TypeStatus.OK);
@@ -119,7 +120,8 @@ public class HttpResponse {
 
         if(uuidJson == null){
             log.info("UUID não encontrado ou Neural Network já está deletado");
-            return ResponseResource.ofError(res, "UUID não encontrado ou Neural Network já está deletado", TypeStatus.NOT_FOUND);
+            return ResponseResource.ofError(res, "UUID não encontrado ou Neural Network já está deletado",
+                    TypeStatus.NOT_FOUND);
         }
 
         log.info("Exclusão de rede neural por UUID realizada com sucesso!");

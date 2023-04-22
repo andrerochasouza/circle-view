@@ -5,21 +5,21 @@ import br.com.andre.data.dominio.MNIST;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class InternTrain {
 
-    private final MNIST MNIST = new MNIST();
-    private NeuralNetwork nn = new NeuralNetwork(784, 30, 30, 10);
+    private MNIST mnist = new MNIST();
+    private NeuralNetwork nn = new NeuralNetwork(784, new int[]{30, 30}, 10, 0.1);
     private final static Logger log = Logger.getLogger(InternTrain.class);
 
     public static void main(String[] args) {
         InternTrain internTrain = new InternTrain();
         internTrain.trainInternByMNIST();
 
-        internTrain.MNIST.printImagemPixels(0);
-        double[] output = internTrain.nn.feedforward(internTrain.MNIST.getImages()[0]);
+        int imageRandom = (int) (Math.random() * 60000);
+        internTrain.mnist.printImagemPixels(imageRandom);
+        double[] output = internTrain.nn.feedforward(internTrain.mnist.getImage(imageRandom));
         for (int i = 0; i < 10; i++) {
             System.out.println("Output " + i + ": " + output[i]);
         }
@@ -27,7 +27,7 @@ public class InternTrain {
 
     public InternTrain() {
         try {
-            MNIST.loadTrainingData();
+            mnist.loadTrainingData();
         } catch (IOException e) {
             log.info("Erro ao carregar MNIST na memória");
             e.printStackTrace();
@@ -58,16 +58,16 @@ public class InternTrain {
     }
 
     private void trainInternByMNIST() {
-        double[][] images = MNIST.getImages();
-        double[][] labels = MNIST.getLabels();
-        int numEpochs = 10;
+        double[][] images = mnist.getImages();
+        double[][] labels = mnist.getLabels();
+        int numEpochs = 150;
         int numImages = 60000;
         int totalProgress = numEpochs * numImages;
         int currentProgress = 0;
 
         for (int i = 0; i < numEpochs; i++) {
             for (int j = 0; j < numImages; j++) {
-                nn.train(images[j], labels[j], 0.5, 1);
+                nn.train(images[j], labels[j]);
                 currentProgress++;
                 int percentComplete = (int) ((double) currentProgress / totalProgress * 100);
                 String progressBar = getProgressBar(percentComplete);
