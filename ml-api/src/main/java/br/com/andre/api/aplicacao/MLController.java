@@ -54,9 +54,11 @@ public class MLController {
         return uuidJson;
     }
 
-    public static JsonObject trainAndReturnJsonNetworkWeights(ArrayList<FrameDTO> frames, ArrayList<double[]> targets,  int hiddenNodesSize, int epochs, double learningRate, UUID uuid) {
+    public static JsonObject trainAndReturnJsonNetworkWeights(ArrayList<FrameDTO> frames, ArrayList<double[]> targets,  int hiddenNodesSize1, int hiddenNodesSize2, double learningRate, UUID uuid) {
 
-        NeuralNetwork neuralNetwork = new NeuralNetwork(frames.get(0).getPixels().size(), hiddenNodesSize, hiddenNodesSize, 10);
+        int[] hiddenNodes = {hiddenNodesSize1, hiddenNodesSize2};
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(frames.get(0).getPixels().size(), hiddenNodes, 10, learningRate);
 
         if(Objects.nonNull(uuid)){
             neuralNetwork = neuralNetworkData.getNeuralNetwork(uuid);
@@ -66,7 +68,7 @@ public class MLController {
             double[] inputs = frames.get(i).getPixels().stream().mapToDouble(Pixel::getValue).toArray();
             double[] target = targets.get(i);
 
-            neuralNetwork.train(inputs, target, learningRate, epochs);
+            neuralNetwork.train(inputs, target);
         }
 
         if(Objects.isNull(uuid)){
@@ -76,23 +78,16 @@ public class MLController {
         }
 
         UUID uuidJson = neuralNetwork.getUuid();
-        double[][] hiddenWeights1 = neuralNetwork.getHiddenWeights1();
-        double[][] hiddenWeights2 = neuralNetwork.getHiddenWeights2();
-        double[][] outputWeights = neuralNetwork.getOutputWeights();
-        double[] bias1 = neuralNetwork.getBias1();
-        double[] bias2 = neuralNetwork.getBias2();
-        double[] bias3 = neuralNetwork.getBias3();
         double[] outputs = neuralNetwork.getOutputs();
+        double[][] biases = neuralNetwork.getBiases();
+        double[][][] weights = neuralNetwork.getWeights();
+
 
         JsonObject networkWeights = new JsonObject();
         networkWeights.add("uuid", new Gson().toJsonTree(uuidJson));
         networkWeights.add("outputs", new Gson().toJsonTree(outputs));
-        networkWeights.add("bias1", new Gson().toJsonTree(bias1));
-        networkWeights.add("bias2", new Gson().toJsonTree(bias2));
-        networkWeights.add("bias3", new Gson().toJsonTree(bias3));
-        networkWeights.add("hiddenWeights1", new Gson().toJsonTree(hiddenWeights1));
-        networkWeights.add("hiddenWeights2", new Gson().toJsonTree(hiddenWeights2));
-        networkWeights.add("outputWeights", new Gson().toJsonTree(outputWeights));
+        networkWeights.add("biases", new Gson().toJsonTree(biases));
+        networkWeights.add("weights", new Gson().toJsonTree(weights));
 
         return networkWeights;
     }
