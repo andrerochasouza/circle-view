@@ -70,6 +70,16 @@ export class FrameComponent implements OnInit {
         // Normaliza o valor entre 0 e 1 e adiciona ao array
         pixelArray.push(1 - grayValue / 255);
       }
+
+    // Desenhar a matriz de pixels no console
+    for (let row = 0; row < 28; row++) {
+      let rowString = "";
+      for (let col = 0; col < 28; col++) {
+        const pixelValue = pixelArray[row * 28 + col];
+        rowString += pixelValue > 0 ? "@" : ".";
+      }
+      console.log(rowString);
+    }
   
       return pixelArray;
     }

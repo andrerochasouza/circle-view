@@ -5,13 +5,25 @@ import br.com.andre.data.dominio.MNIST;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class InternTrain {
 
     private final MNIST MNIST = new MNIST();
-    private NeuralNetwork nn = new NeuralNetwork(784, 16, 10);
+    private NeuralNetwork nn = new NeuralNetwork(784, 30, 30, 10);
     private final static Logger log = Logger.getLogger(InternTrain.class);
+
+    public static void main(String[] args) {
+        InternTrain internTrain = new InternTrain();
+        internTrain.trainInternByMNIST();
+
+        internTrain.MNIST.printImagemPixels(0);
+        double[] output = internTrain.nn.feedforward(internTrain.MNIST.getImages()[0]);
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Output " + i + ": " + output[i]);
+        }
+    }
 
     public InternTrain() {
         try {
@@ -48,14 +60,14 @@ public class InternTrain {
     private void trainInternByMNIST() {
         double[][] images = MNIST.getImages();
         double[][] labels = MNIST.getLabels();
-        int numEpochs = 100;
+        int numEpochs = 10;
         int numImages = 60000;
         int totalProgress = numEpochs * numImages;
         int currentProgress = 0;
 
         for (int i = 0; i < numEpochs; i++) {
             for (int j = 0; j < numImages; j++) {
-                nn.train(images[j], labels[j], 0.1, 1);
+                nn.train(images[j], labels[j], 0.5, 1);
                 currentProgress++;
                 int percentComplete = (int) ((double) currentProgress / totalProgress * 100);
                 String progressBar = getProgressBar(percentComplete);
