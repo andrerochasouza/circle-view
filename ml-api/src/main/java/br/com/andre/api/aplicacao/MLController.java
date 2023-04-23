@@ -18,6 +18,18 @@ public class MLController {
 
     private static NeuralNetworkData neuralNetworkData = new NeuralNetworkData();
 
+    public static JsonObject newModelNeuralNetwork(){
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(784, new int[]{30, 30}, 10, 0.1);
+
+        neuralNetworkData.saveNeuralNetwork(neuralNetwork);
+
+        JsonObject uuidJson = new JsonObject();
+        uuidJson.add("uuid", new Gson().toJsonTree(neuralNetwork.getUuid()));
+
+        return uuidJson;
+    }
+
     public static JsonObject internTrainByMNISTAndReturnUUID() {
 
         Instant start = Instant.now();
