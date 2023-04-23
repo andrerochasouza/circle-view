@@ -70,10 +70,11 @@ public class HttpClientApi {
             post("/train", (req, res) -> HttpResponse.newTrain(req, res), gson::toJson);
             post("/feedfoward", (req, res) -> HttpResponse.newFeedfoward(req, res), gson::toJson);
             path("/neuralnetwork", () -> {
+                get("/newmodel", (req, res) -> HttpResponse.getNewModel(req, res), gson::toJson);
                 get("/list", (req, res) -> HttpResponse.getAllUUIDs(req, res), gson::toJson);
                 get("/list/:uuid", (req, res) -> HttpResponse.getNeuralNetworkByUUID(req, res), gson::toJson);
                 delete("/delete/:uuid", (req, res) -> HttpResponse.deleteNeuralNetworkByUUID(req, res), gson::toJson);
-                delete("/deleteAll", (req, res) -> HttpResponse.deleteAllNeuralNetworks(req, res), gson::toJson);
+                delete("/deleteall", (req, res) -> HttpResponse.deleteAllNeuralNetworks(req, res), gson::toJson);
             });
         });
 

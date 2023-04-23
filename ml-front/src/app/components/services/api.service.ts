@@ -6,7 +6,7 @@ import { Base64 } from 'js-base64';
 
 import { FeedfowardBody } from 'src/app/components/model/feedfowardBody';
 import { TrainBody } from 'src/app/components/model/trainBody';
-import { Response, ResponseTrain, ResponseUUIDs } from '../model/response';
+import { Response, ResponseFeedfoward, ResponseTrain } from '../model/response';
 
 
 @Injectable({
@@ -21,19 +21,19 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  enviaImagemFeedfoward(feedfowardBody: FeedfowardBody, uuid: string): Observable<any> {
+  enviaImagemFeedfoward(feedfowardBody: FeedfowardBody, uuid: string): Observable<Response<ResponseFeedfoward>> {
     console.log(feedfowardBody);
-    return this.http.post<any>(`${this.API}/feedfoward?uuid=${uuid}`, feedfowardBody);
+    return this.http.post<Response<ResponseFeedfoward>>(`${this.API}/feedfoward?uuid=${uuid}`, feedfowardBody);
   }
 
-  enviaImagemTrain(trainBody: TrainBody, hiddenNodesSize: number, epochs: number, learningRate: number, uuid: string): Observable<Response<ResponseTrain>> {
+  enviaImagemTrain(trainBody: TrainBody, hiddenNodesSize1: number, hiddenNodesSize2: number, learningRate: number, uuid: string): Observable<Response<ResponseTrain>> {
 
     console.log(trainBody);
     if(uuid == '' || uuid == undefined || uuid == null){
-      const url: string = `${this.API}/train?hiddenNodesSize=${hiddenNodesSize}&epochs=${epochs}&learningRate=${learningRate}`;
+      const url: string = `${this.API}/train?hiddenNodesSize1=${hiddenNodesSize1}&hiddenNodesSize2=${hiddenNodesSize2}&learningRate=${learningRate}`;
       return this.http.post<Response<ResponseTrain>>(url, trainBody);
     }
-    const url: string = `${this.API}/train?hiddenNodesSize=${hiddenNodesSize}&epochs=${epochs}&learningRate=${learningRate}&uuid=${uuid}`;
+    const url: string = `${this.API}/train?hiddenNodesSize1=${hiddenNodesSize1}&hiddenNodesSize2=${hiddenNodesSize2}&learningRate=${learningRate}&uuid=${uuid}`;
     return this.http.post<Response<ResponseTrain>>(url, trainBody);
   }
 }

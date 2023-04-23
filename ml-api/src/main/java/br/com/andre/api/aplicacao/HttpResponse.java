@@ -20,6 +20,14 @@ public class HttpResponse {
 
     private final static Logger log = Logger.getLogger(HttpResponse.class);
 
+    public static ResponseResource getNewModel(Request req, Response res){
+
+        JsonObject uuidJson =  MLController.newModelNeuralNetwork();
+
+        log.info("Novo modelo criado com sucesso!");
+        return ResponseResource.of(res, uuidJson, TypeStatus.OK);
+    }
+
     public static ResponseResource getTrainByMNIST(Request req, Response res){
 
         JsonObject uuidJson =  MLController.internTrainByMNISTAndReturnUUID();

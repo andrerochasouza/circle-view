@@ -19,10 +19,8 @@ export interface ResponseFeedfoward{
 export interface ResponseTrain{
     uuid: string;
     outputs: number[];
-    bias1: number[];
-    bias2: number[];
-    hiddenWeights: number[][];
-    outputWeights: number[][];
+    biases: number[][];
+    weights: number[][][];
 }
 
 export interface ResponseUUIDs{
@@ -30,12 +28,19 @@ export interface ResponseUUIDs{
 }
 
 export interface ResponseNeuralNetwork{
-    neuralNetwork: {
-        uuid: string;
-        hiddenWeights: number[][];
-        outputWeights: number[][];
-        bias1: number[];
-        bias2: number[];
-        outputs: number[];
-    }
+    neuralNetwork: NeuralNetwork;
+}
+
+export interface ResponseUUID{
+    uuid: string;
+}
+
+interface NeuralNetwork{
+    uuid: string;
+    outputsNodes: number;
+    layers: number;
+    learningRate: number;
+    weights: number[][][];
+    biases: number[][];
+    outputs: number[];
 }
