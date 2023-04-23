@@ -47,70 +47,95 @@ public class NeuralNetwork {
     }
 
     public double[] feedforward(double[] input) {
-        this.outputs = input;
-        for (int i = 0; i < this.layers; i++) {
-            double[] layerOutput = new double[this.weights[i].length];
-            for (int j = 0; j < this.weights[i].length; j++) {
-                double sum = 0;
-                for (int k = 0; k < this.weights[i][j].length; k++) {
-                    sum += this.weights[i][j][k] * this.outputs[k];
-                }
-                layerOutput[j] = sigmoid(sum + this.biases[i][j]);
-            }
-            this.outputs = layerOutput;
+
+        // Feedforward
+        double[] hiddenFirstNodes = feedforwardLayer(input, this.weights[0], this.biases[0]);
+        double[] hiddenSecondNodes = feedforwardLayer(hiddenFirstNodes, this.weights[1], this.biases[1]);
+        double[] outputNodes = feedforwardLayer(hiddenSecondNodes, this.weights[2], this.biases[2]);
+
+        for (int i = 0; i < outputNodes.length; i++) {
+            outputNodes[i] = Math.round(outputNodes[i] * 1000.0) / 1000.0;
         }
-        return this.outputs;
+
+        this.outputs = outputNodes;
+
+        return outputs;
     }
 
     public void train(double[] input, double[] target) {
-        double[][] layerOutputs = new double[this.layers][];
-        layerOutputs[0] = input;
+        double[] hiddenFirstNodes;
+        double[] hiddenSecondNodes;
+        double[] outputNodes;
+        double[] hiddenFirstDeltas;
+        double[] hiddenSecondDeltas;
+        double[] outputDeltas;
 
         // Feedforward
-        for (int i = 1; i < this.layers; i++) {
-            double[] layerOutput = new double[this.weights[i].length];
-            for (int j = 0; j < this.weights[i].length; j++) {
-                double sum = 0;
-                for (int k = 0; k < this.weights[i][j].length; k++) {
-                    sum += this.weights[i][j][k] * layerOutputs[i - 1][k];
-                }
-                layerOutput[j] = sigmoid(sum + this.biases[i][j]);
-            }
-            layerOutputs[i] = layerOutput;
-        }
+        hiddenFirstNodes = feedforwardLayer(input, this.weights[0], this.biases[0]);
+        hiddenSecondNodes = feedforwardLayer(hiddenFirstNodes, this.weights[1], this.biases[1]);
+        outputNodes = feedforwardLayer(hiddenSecondNodes, this.weights[2], this.biases[2]);
 
         // Backpropagation
-        double[][] layerErrors = new double[this.layers][];
-        double[] outputErrors = new double[this.outputNodes];
-        for (int i = 0; i < outputErrors.length; i++) {
-            outputErrors[i] = layerOutputs[this.layers - 1][i] - target[i];
-        }
-        layerErrors[this.layers - 1] = outputErrors;
+        outputDeltas = backpropagationOutputLayer(target, outputNodes);
+        hiddenSecondDeltas = backpropagationLayer(outputDeltas, this.weights[2], hiddenSecondNodes);
+        hiddenFirstDeltas = backpropagationLayer(hiddenSecondDeltas, this.weights[1], hiddenFirstNodes);
 
-        for (int i = this.layers - 2; i > 0; i--) {
-            double[] layerError = new double[this.weights[i].length];
-            double[] prevLayerOutput = layerOutputs[i - 1];
-            for (int j = 0; j < this.weights[i].length; j++) {
-                double error = 0;
-                for (int k = 0; k < this.weights[i + 1].length; k++) {
-                    error += layerErrors[i + 1][k] * this.weights[i + 1][k][j];
-                }
-                layerError[j] = error * sigmoidDerivative(layerOutputs[i][j]);
-            }
-            layerErrors[i] = layerError;
-            updateWeights(i, layerError, prevLayerOutput);
-        }
-
-        updateWeights(0, layerErrors[1], input);
+        // Atualização dos pesos e biases
+        this.weights[2] = updateWeights(this.weights[2], hiddenSecondNodes, outputDeltas, this.learningRate);
+        this.biases[2] = updateBiases(this.biases[2], outputDeltas, this.learningRate);
+        this.weights[1] = updateWeights(this.weights[1], hiddenFirstNodes, hiddenSecondDeltas, this.learningRate);
+        this.biases[1] = updateBiases(this.biases[1], hiddenSecondDeltas, this.learningRate);
+        this.weights[0] = updateWeights(this.weights[0], input, hiddenFirstDeltas, this.learningRate);
+        this.biases[0] = updateBiases(this.biases[0], hiddenFirstDeltas, this.learningRate);
     }
 
-    private void updateWeights(int layerIndex, double[] layerError, double[] prevLayerOutput) {
-        for (int i = 0; i < this.weights[layerIndex].length; i++) {
-            for (int j = 0; j < this.weights[layerIndex][i].length; j++) {
-                this.weights[layerIndex][i][j] -= this.learningRate * layerError[i] * prevLayerOutput[j];
+    private double[] feedforwardLayer(double[] input, double[][] weights, double[] biases) {
+        double[] nodes = new double[weights.length];
+        for (int i = 0; i < weights.length; i++) {
+            double sum = 0;
+            for (int j = 0; j < weights[i].length; j++) {
+                sum += weights[i][j] * input[j];
             }
-            this.biases[layerIndex][i] -= this.learningRate * layerError[i];
+            nodes[i] = sigmoid(sum + biases[i]);
         }
+        return nodes;
+    }
+
+    private double[] backpropagationOutputLayer(double[] target, double[] outputNodes) {
+        double[] deltas = new double[outputNodes.length];
+        for (int i = 0; i < deltas.length; i++) {
+            double error = target[i] - outputNodes[i];
+            deltas[i] = error * sigmoidDerivative(outputNodes[i]);
+        }
+        return deltas;
+    }
+
+    private double[] backpropagationLayer(double[] deltas, double[][] weights, double[] nodes) {
+        double[] newDeltas = new double[nodes.length];
+        for (int i = 0; i < newDeltas.length; i++) {
+            double error = 0;
+            for (int j = 0; j < deltas.length; j++) {
+                error += deltas[j] * weights[j][i];
+            }
+            newDeltas[i] = error * sigmoidDerivative(nodes[i]);
+        }
+        return newDeltas;
+    }
+
+    private double[][] updateWeights(double[][] weights, double[] nodes, double[] deltas, double learningRate) {
+        for (int i = 0; i < weights.length; i++) {
+            for (int j = 0; j < weights[i].length; j++) {
+                weights[i][j] += nodes[j] * deltas[i] * learningRate;
+            }
+        }
+        return weights;
+    }
+
+    private double[] updateBiases(double[] biases, double[] deltas, double learningRate) {
+        for (int i = 0; i < biases.length; i++) {
+            biases[i] += deltas[i] * learningRate;
+        }
+        return biases;
     }
 
     private double sigmoid(double x) {

@@ -20,7 +20,7 @@ public class MNIST {
         try {
             mnist.loadTrainingData();
             int random = (int) (Math.random() * 60000);
-            mnist.printImagemPixels( random);
+            mnist.printImagemPixels(59999);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class MNIST {
         return labels[index];
     }
 
-    private int getLabelOneHotOneValue(double[] oneHotLabel) {
+    public int getLabelOneHotOneValue(double[] oneHotLabel) {
         for (int i = 0; i < oneHotLabel.length; i++) {
             if (oneHotLabel[i] == 1) {
                 return i;
