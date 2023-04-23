@@ -69,7 +69,7 @@ public class InternTrain {
     private void trainInternByMNIST() {
         double[][] images = mnist.getImages();
         double[][] labels = mnist.getLabels();
-        int numEpochs = 1;
+        int numEpochs = 150;
         int numImages = 60000;
         int totalProgress = numEpochs * numImages;
         int currentProgress = 0;
