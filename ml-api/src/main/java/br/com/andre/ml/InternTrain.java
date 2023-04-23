@@ -15,13 +15,22 @@ public class InternTrain {
 
     public static void main(String[] args) {
         InternTrain internTrain = new InternTrain();
-        internTrain.trainInternByMNIST();
 
-        int imageRandom = (int) (Math.random() * 60000);
-        internTrain.mnist.printImagemPixels(imageRandom);
-        double[] output = internTrain.nn.feedforward(internTrain.mnist.getImage(imageRandom));
+        int rand = (int) (Math.random() * 60000);
+        internTrain.mnist.printImagemPixels(rand);
+        double[] output = internTrain.nn.feedforward(internTrain.mnist.getImage(rand));
         for (int i = 0; i < 10; i++) {
             System.out.println("Output " + i + ": " + output[i]);
+        }
+
+        System.out.println("--------------------------------");
+
+        internTrain.trainInternByMNIST();
+
+        internTrain.mnist.printImagemPixels(rand);
+        double[] output1 = internTrain.nn.feedforward(internTrain.mnist.getImage(rand));
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Output1 " + i + ": " + output1[i]);
         }
     }
 
@@ -60,7 +69,7 @@ public class InternTrain {
     private void trainInternByMNIST() {
         double[][] images = mnist.getImages();
         double[][] labels = mnist.getLabels();
-        int numEpochs = 150;
+        int numEpochs = 1;
         int numImages = 60000;
         int totalProgress = numEpochs * numImages;
         int currentProgress = 0;
