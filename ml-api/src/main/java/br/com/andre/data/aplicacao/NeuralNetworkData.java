@@ -1,6 +1,6 @@
 package br.com.andre.data.aplicacao;
 
-import br.com.andre.ml.NeuralNetwork;
+import br.com.andre.ml.model.NeuralNetwork;
 import org.apache.log4j.Logger;
 
 import java.sql.*;

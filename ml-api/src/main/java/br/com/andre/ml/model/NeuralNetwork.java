@@ -1,4 +1,4 @@
-package br.com.andre.ml;
+package br.com.andre.ml.model;
 
 import java.util.Random;
 import java.util.UUID;
