@@ -1,7 +1,8 @@
-package br.com.andre.ml;
+package br.com.andre.ml.aplicacao;
 
 import br.com.andre.data.aplicacao.NeuralNetworkData;
 import br.com.andre.data.dominio.MNIST;
+import br.com.andre.ml.model.NeuralNetwork;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
