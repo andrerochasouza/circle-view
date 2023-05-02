@@ -1,11 +1,11 @@
 package br.com.andre.api.aplicacao;
 
+import br.com.andre.api.aplicacao.v1.HttpResponseV1;
+import br.com.andre.api.aplicacao.v2.HttpResponseV2;
 import br.com.andre.data.aplicacao.SQLiteConnection;
 import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import spark.Filter;
-import spark.Spark;
 
 import java.util.Base64;
 
@@ -64,17 +64,24 @@ public class HttpClientApi {
 
         // Mapeamento de Paths do API
         path("/api", () -> {
-            get("/trainbymnist", (req, res) -> HttpResponse.getTrainByMNIST(req, res), gson::toJson);
-            get("/retrainbymnist", (req, res) -> HttpResponse.getRetrainByMNIST(req, res), gson::toJson);
-            get("/healthcheck", (req, res) -> HttpResponse.getHealthCheck(req, res), gson::toJson);
-            post("/train", (req, res) -> HttpResponse.newTrain(req, res), gson::toJson);
-            post("/feedfoward", (req, res) -> HttpResponse.newFeedfoward(req, res), gson::toJson);
-            path("/neuralnetwork", () -> {
-                get("/newmodel", (req, res) -> HttpResponse.getNewModel(req, res), gson::toJson);
-                get("/list", (req, res) -> HttpResponse.getAllUUIDs(req, res), gson::toJson);
-                get("/list/:uuid", (req, res) -> HttpResponse.getNeuralNetworkByUUID(req, res), gson::toJson);
-                delete("/delete/:uuid", (req, res) -> HttpResponse.deleteNeuralNetworkByUUID(req, res), gson::toJson);
-                delete("/deleteall", (req, res) -> HttpResponse.deleteAllNeuralNetworks(req, res), gson::toJson);
+            get("/healthcheck", HttpResponseV1::getHealthCheck, gson::toJson);
+            path("/v1", () -> {
+                get("/trainbymnist", HttpResponseV1::getTrainByMNIST, gson::toJson);
+                get("/retrainbymnist", HttpResponseV1::getRetrainByMNIST, gson::toJson);
+                post("/train", HttpResponseV1::newTrain, gson::toJson);
+                post("/feedfoward", HttpResponseV1::newFeedfoward, gson::toJson);
+                path("/neuralnetwork", () -> {
+                    get("/newmodel", HttpResponseV1::getNewModel, gson::toJson);
+                    get("/list", HttpResponseV1::getAllUUIDs, gson::toJson);
+                    get("/list/:uuid", HttpResponseV1::getNeuralNetworkByUUID, gson::toJson);
+                    delete("/delete/:uuid", HttpResponseV1::deleteNeuralNetworkByUUID, gson::toJson);
+                    delete("/deleteall", HttpResponseV1::deleteAllNeuralNetworks, gson::toJson);
+                });
+            });
+            path("/v2", ()->{
+                path("/cnn-cifar10", ()->{
+                    post("/predict", HttpResponseV2::newPredict, gson::toJson);
+                });
             });
         });
 
