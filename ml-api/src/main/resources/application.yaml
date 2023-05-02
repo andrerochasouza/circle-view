@@ -3,4 +3,5 @@ password: andre.rsouza123
 port: 4567
 enableCors: true
 enableAuthentication: false
-pathDB: C:/Users/1202000046/Desktop/java projects/circle-view/ml-api/src/main/resources
+pathDB: C:/Users/1202000046/Desktop/java_projects/circle-view/ml-api/src/main/resources
+pathPython: C:/Users/1202000046/Desktop/java_projects/circle-view/ml-dl
