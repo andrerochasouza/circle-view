@@ -1,27 +1,21 @@
-# MlFront
+# CIRCLE VIEW
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.6.
+**Circle View** é um projeto que oferece uma API que recebe solicitações com dados de JSON ou/e imagens, podendo assim, retornar resultados de treinos/avaliações no modelo de machine learning.
 
-## Development server
+## Arquitetura
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+O projeto está dividido em três camadas:
 
-## Code scaffolding
+**Camada de API (ml-api):** responsável por receber as solicitações HTTP e enviar as respostas correspondentes. Nesse caso, é implementado um servidor HTTP em Java que usa a biblioteca Spark para lidar com as solicitações e respostas.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**Camada de ML (ml-dl):** responsável por executar algortimos nos modelos de machine learning, implementado com Tensorflow e Keras, podendo assim, serem usados modelos de redes neurais convolucionais, recorrentes, etc.
 
-## Build
+**Camada de Front (ml-front):** responsável em receber as imagens e enviar para a API, podendo assim, retornar os resultados de treinos/avaliações no modelo de machine learning.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Status
 
-## Running unit tests
+**Camada de API:** Em desenvolvimento.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+**Camada de ML:** Em desenvolvimento.
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**Camada de Front:** Em desenvolvimento.
