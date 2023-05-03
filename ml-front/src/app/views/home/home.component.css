@@ -1,12 +1,28 @@
-
 /* Page */
 
 .page {
+  position: relative; /* adicionado */
   font-family: 'Roboto', sans-serif;
   font-weight: 700;
   letter-spacing: 0.03em;
   background-color: #343541;
   height: 100%;
+  width: 100%;
+}
+
+/* Content */
+.content {
+  height: 100%;
+  background-color: #343541;
+  text-align: center;
+  overflow: auto;
+  width: calc(100% - 300px);
+  margin-left: 300px;
+}
+
+.content.closed {
+  width: 100%;
+  margin-left: 0;
 }
 
 /* Navbar */
@@ -20,191 +36,76 @@
   background-color: #161b22;
   padding-top: 20px;
   text-align: center;
+  transition: transform 0.5s ease-out;
 }
 
-/* Content */
-
-.content {
-  margin-left: 300px;
-  min-height: 100vh;
-  background-color: #343541;
-  box-sizing: border-box;
+.navbar.closed {
+  transform: translateX(-300px);
+  transition: transform 0.5s ease-out;
 }
 
-/* Containers */
-
-.container-gray {
-  background-color: #444654;
-  height: 400px;
-  margin-bottom: 20px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.container-rounded {
-  background-color: #1E1E1E;
-  justify-content: center;
-  align-items: center;
-  height: 325px;
-  width: 350px;
-  border-radius: 8px;
-  padding: 20px;
-}
 
 /* Botões do Navbar */
-
-.buttoncircle{
+.buttonCircle {
   display: inline-block;
   padding: 15px 16px;
   border-radius: 10px;
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 400;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   background-image: none;
   border: 1px solid;
-  border-color: #626262;
-  color: #fff;
-  background-color: #161b22;
-  border-color: #444654;
-  width: 95%;
-  margin: 0 auto;
-}
-
-.buttonnavbar {
-  display: inline-block;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
   color: #fff;
   background-color: #161b22;
   border-color: #161b22;
-  width: 100%;
+  width: 95%;
+  margin: 0px 0px 30px 0px;
 }
 
-.buttonnavbar:hover {
+.buttonNavbar {
+  font-family: Roboto, sans-serif;
+  display: inline-flex;
+  justify-content: center;
+  font-weight: 0;
+  font-size: 14px;
   color: #fff;
-  background-color: #2A2B32;
-  border-color: #2A2B32;
+  background-color: #377475;
+  padding: 10px 30px;
+  border: solid #293b42 2px;
+  box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px;
+  transition: 371ms;
+  transform: translateY(0);
+  cursor: pointer;
+  margin: 0 auto 15px;
+  width: 80%;
 }
 
-/*  Botões numerais  */
-.radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .radio-group input[type="radio"] {
-    display: none;
-  }
-  
-  .radio-group label {
-    display: block;
-    position: relative;
-    margin: 5px;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #000;
-    background-color: #fff;
-    text-align: center;
-    font-size: 1.2em;
-    line-height: 1.8em;
-  }
-  
-  .radio-group input[type="radio"]:checked + label {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-  }
-  
-  .radio-group input[type="radio"]:checked + label::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .radio-group input[type="radio"]:checked + label::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #007bff;
-    transition: transform 0.2s ease-in-out;
-  }
+.buttonNavbar:hover {
+  width: 85%;
+  padding: 10px 30px;
+  transform: translateY(-0px);
+  background-color: #377475;
+  color: #ffffff;
+  border: solid 2px #377475;
+}
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    color: #333;
-    background-color: #fff;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23333' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px top 50%;
-    background-size: 10px 6px;
-  }
-  
-  select:focus {
-    outline: none;
-    box-shadow: 0px 0px 3px #ccc;
-  }
-  
-  select::-ms-expand {
-    display: none;
-  }
-  
-  option {
-    color: #333;
-    background-color: #fff;
-  }
+/* Botão toggle */
+.toggle-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 100; /* alterado */
+  background-color: #377475;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: solid #293b42 2px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
 
-  div.form-group {
-    float: right;
-    margin-top: 20px;
-    margin-right: 20px;
-  }
+.toggle-button:hover {
+  background-color: #293b42;
+}

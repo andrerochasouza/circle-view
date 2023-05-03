@@ -1,0 +1,65 @@
+<div class="container-gray">
+  <div class="container-rounded">
+    <app-frame class="po-xl-12 po-lg-12 po-md-12 po-sm-12 po-text-center"></app-frame>
+  </div>
+</div>
+<po-widget class="po-xl-3 po-lg-6 po-mb-6 po-sm-12">
+  <po-button class="po-lg-12 po-mb-12 po-sm-12" p-label="Feedfoward"
+    (p-click)="realizarFeedfowardByUUID()">Feedfoward</po-button>
+  <po-button class="po-lg-12 po-mb-12 po-sm-12" p-label="Treinar" (p-click)="realizarTreino()">Treinar</po-button>
+  <po-button class="po-lg-12 po-mb-12 po-sm-12" p-label="Limpar" (p-click)="limparTela()">Limpar</po-button>
+</po-widget>
+
+<po-container class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-3">
+  <div class="po-lg-12 po-md-12 po-sm-12 po-text-center">
+    <po-button class="po-lg-12 po-md-12" p-label="Novo Modelo" p-type="primary" p-icon="po-icon po-icon-last-page"
+      (p-click)="novoModeloByTrain()"></po-button>
+  </div>
+  <div class="po-lg-12 po-md-12 po-sm-12 po-text-center po-mt-1">
+    <po-button class="po-lg-12 po-md-12" p-label="Deletar todos UUIDs" p-type="primary"
+      p-icon="po-icon po-icon-last-page" (p-click)="deletarTodosUUIDs()"></po-button>
+  </div>
+  <select class="po-lg-12 po-md-12 po-sm-12 po-text-center po-mt-1" po-select [(ngModel)]="uuidSelecionado"
+    (ngModelChange)="selecionaUUID($event)">
+    <option *ngFor="let uuid of listUUIDs" [value]="uuid">{{uuid}}</option>
+  </select>
+</po-container>
+
+<po-widget class="po-xl-3 po-lg-6 po-mb-6 po-sm-12" p-title="Numero de saída">
+  <div class="po-font-title po-text-center">{{output}}</div>
+  <div class="po-text-center sample-container-dashboard">{{uuidSelecionado}}</div>
+</po-widget>
+
+<po-widget class="po-xl-3 po-lg-6 po-mb-6 po-sm-12 po-text-center">
+  <div class="radio-group">
+    <input type="radio" id="0" name="numero" value="0" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="0">0</label>
+
+    <input type="radio" id="1" name="numero" value="1" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="1">1</label>
+
+    <input type="radio" id="2" name="numero" value="2" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="2">2</label>
+
+    <input type="radio" id="3" name="numero" value="3" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="3">3</label>
+
+    <input type="radio" id="4" name="numero" value="4" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="4">4</label>
+
+    <input type="radio" id="5" name="numero" value="5" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="5">5</label>
+
+    <input type="radio" id="6" name="numero" value="6" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="6">6</label>
+
+    <input type="radio" id="7" name="numero" value="7" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="7">7</label>
+
+    <input type="radio" id="8" name="numero" value="8" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="8">8</label>
+
+    <input type="radio" id="9" name="numero" value="9" [(ngModel)]="numeroSelecionadoTarget">
+    <label for="9">9</label>
+  </div>
+</po-widget>
