@@ -1,80 +1,45 @@
 package br.com.andre.api.aplicacao.v2;
 
+import br.com.andre.api.aplicacao.flaskApi.FlaskClient;
 import br.com.andre.api.dominio.TypeImage;
 import br.com.andre.util.YamlUtil;
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
 
 public class MLControllerV2 {
 
+    private final static FlaskClient flaskClient = new FlaskClient();
     private final static Logger log = Logger.getLogger(MLControllerV2.class);
 
-    public static JsonObject newPredict(byte[] imgBytes) {
+    public static JsonObject newPredict(byte[] imgBytes) throws RuntimeException, IOException {
 
-        try {
-            log.info("Iniciando o processamentro da imagem...");
+        log.info("Iniciando o processamentro da imagem...");
 
-            TypeImage typeImage = TypeImage.fromBytes(imgBytes);
+        TypeImage typeImage = TypeImage.fromBytes(imgBytes);
 
-            File tempFile = new File(YamlUtil.get("pathPython") + "/temp." + typeImage.getExtension());
+        File resourceDirectory = new File("src/main/resources");
+        String resourcePath = resourceDirectory.getAbsolutePath();
 
-            FileOutputStream outputStream = new FileOutputStream(tempFile);
-            outputStream.write(imgBytes);
-            outputStream.close();
+        File file = new File(resourcePath + "/images/temp." + typeImage.getExtension());
 
-            log.info("Imagem temporária criada com sucesso!");
+        log.info("Criando imagem temporária");
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(imgBytes);
+        outputStream.close();
 
-            int result = runPythonModel(typeImage.getExtension());
+        log.info("Realizando requisição para o Api Flask");
+        String response = flaskClient.predict(file.getPath());
 
-            if(!tempFile.delete()){
-                log.error("Erro ao excluir o arquivo temporário");
-                throw new RuntimeException("Erro ao excluir o arquivo temporário");
-            }
+        log.info("Deletando arquivo temporário");
+        file.delete();
 
-            JsonObject jsonResponse = new JsonObject();
-            jsonResponse.addProperty("result", result);
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("result", response);
 
-            return jsonResponse;
-
-        } catch (IOException e) {
-            log.error("Erro ao salvar arquivo temporário");
-            throw new RuntimeException("Erro ao salvar arquivo temporário", e);
-        }
-    }
-
-    private static int runPythonModel(String extension) {
-        try {
-            log.info("Iniciando o processamento do modelo em Python...");
-            log.info("Comando: " + YamlUtil.get("pathPython") + "/.env/Scripts/python.exe " + YamlUtil.get("pathPython") + "/run.py " + " " + YamlUtil.get("pathPython") + "/temp." + extension);
-            Process process = Runtime.getRuntime().exec(YamlUtil.get("pathPython") + "/.env/Scripts/python.exe " + YamlUtil.get("pathPython") + "/run.py " + " " + YamlUtil.get("pathPython") + "/temp." + extension);
-            int exitCode = process.waitFor();
-            if(exitCode != 0){
-                log.error("Erro ao executar o arquivo run.py em Python");
-                throw new RuntimeException("Erro ao executar o arquivo run.py em Python");
-            }
-
-            log.info("Processamento do modelo em Python finalizado com sucesso!");
-
-            String lastLine = null;
-            try(BufferedReader reader = new BufferedReader(new FileReader(YamlUtil.get("pathPython") + "/output.txt"))){
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    lastLine = line;
-                }
-            }
-
-            if(lastLine == null){
-                log.error("Não foi possível ler a saída do modelo em Python");
-                throw new RuntimeException("Não foi possível ler a saída do modelo em Python");
-            }
-
-            return Integer.parseInt(lastLine);
-
-        } catch (IOException | InterruptedException e) {
-            log.error("Erro ao executar o modelo em Python", e);
-            throw new RuntimeException("Erro ao executar o modelo em Python", e);
-        }
+        return jsonResponse;
     }
 }
