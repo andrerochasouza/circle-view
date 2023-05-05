@@ -6,7 +6,9 @@ import br.com.andre.data.aplicacao.SQLiteConnection;
 import br.com.andre.util.YamlUtil;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import spark.Spark;
 
+import javax.servlet.MultipartConfigElement;
 import java.util.Base64;
 
 import static spark.Spark.*;

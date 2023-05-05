@@ -11,6 +11,10 @@ export interface ResponseError{
     status: number;
 }
 
+export interface ResponseImage{
+    result: number;
+}
+
 export interface ResponseFeedfoward{
     uuid: string;
     outputs: number[];

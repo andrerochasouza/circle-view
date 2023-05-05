@@ -1,17 +1,13 @@
 <div class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
     <po-widget class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
-        <po-upload
-            class="po-md-12"
-            name="Upload Image"
-            p-label="Selecione uma imagem"
-            p-drop-label="Arraste e solte a imagem aqui"
-            [p-required]="true"
-            [p-url]="imageUrl"
-            [p-restrictions]="fileRestrictions"
-            (p-error)="resumeUploadError($event)"
-            (p-success)="resumeUploadSuccess($event)">
-        </po-upload>
-
-        <img *ngIf="imageUrl" [src]="imageUrl" class="img-preview">
+      <input type="file" id="inputFile" name="inputFile" accept=".png,.jpg,.jpeg,.bmp">
+      <po-button po-button po-button-icon="po-icon-upload" po-button-type="primary" (click)="enviaImagemParaPredict()">
+        <po-icon po-button-icon="po-icon-upload"></po-icon>
+        Enviar
+      </po-button>
+      <div class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
+        <img *ngIf="pathImage" [src]="pathImage" width="150px" height="150px">
+        <span *ngIf="prediction">Predição: {{prediction}}</span>
+      </div>
     </po-widget>
-</div>
+  </div>
