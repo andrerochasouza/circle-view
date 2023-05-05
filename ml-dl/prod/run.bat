@@ -11,5 +11,3 @@ echo VirtualEnv iniciado!
 echo Indo iniciar o servidor...
 
 call venv\Scripts\python.exe prod\run.py
-
-echo Servidor iniciado!
