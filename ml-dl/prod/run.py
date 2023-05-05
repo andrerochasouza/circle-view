@@ -1,11 +1,10 @@
 # Usar python 3.7
-# Usar: python run.py <path_to_image>
+# Usar: python run.py
 import sys
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1'
 
-if sys.version_info == (3, 7):
-    sys.exit('Este Script requer Python 3.7')
-
+print('Python %s on %s' % (sys.version, sys.platform))
 
 from flask import Flask, request, jsonify
 import tensorflow as tf
@@ -15,8 +14,9 @@ import numpy as np
 app = Flask(__name__)
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
+dir_path = os.path.join(dir_path, 'model_prod', 'model_prod.h5')
 
-model = tf.keras.models.load_model(dir_path, 'model_prod', 'model_prod.h5')
+model = tf.keras.models.load_model(dir_path)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -27,8 +27,9 @@ def predict():
 
     predict_probabilities = model.predict(np.array([image]))
     predict_class = np.argmax(predict_probabilities)
+    predict_class = str(predict_class)
 
-    return jsonify({'class': predict_class})
+    return jsonify({'value': predict_class})
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,18 +2,19 @@ package br.com.andre.api.aplicacao.v2;
 
 import br.com.andre.api.aplicacao.flaskApi.FlaskClient;
 import br.com.andre.api.dominio.TypeImage;
-import br.com.andre.util.YamlUtil;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MLControllerV2 {
 
     private final static FlaskClient flaskClient = new FlaskClient();
     private final static Logger log = Logger.getLogger(MLControllerV2.class);
+    private final static Gson gson = new Gson();
 
     public static JsonObject newPredict(byte[] imgBytes) throws RuntimeException, IOException {
 
@@ -32,13 +33,18 @@ public class MLControllerV2 {
         outputStream.close();
 
         log.info("Realizando requisição para o Api Flask");
-        String response = flaskClient.predict(file.getPath());
+        String responsebody = flaskClient.predict(file.getPath());
+
+        JsonObject responseJson = gson.fromJson(responsebody, JsonObject.class);
+        int predictValue = Integer.parseInt(responseJson.get("value").getAsString());
 
         log.info("Deletando arquivo temporário");
-        file.delete();
+        if(!file.delete()){
+            log.error("Erro ao deletar arquivo temporário");
+        }
 
         JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("result", response);
+        jsonResponse.addProperty("result", predictValue);
 
         return jsonResponse;
     }
