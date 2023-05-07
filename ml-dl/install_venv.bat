@@ -6,7 +6,7 @@ echo --------------------------------------------------
 
 rem Verificar se já existe a pasta venv
 if exist venv (
-    echo Erro: Já existe a pasta venv.
+    echo Erro: Ja existe a pasta venv.
     echo --
     echo Remova a pasta venv e tente novamente.
     echo --------------------------------------------------
@@ -17,9 +17,9 @@ if exist venv (
 rem Verificar se o caminho do Python 3.7 foi especificado na linha de comando
 set PYTHON_PATH=%1
 if "%1"=="" (
-    echo Erro: Caminho do Python 3.7 não especificado na linha de comando.
+    echo Erro: Caminho do Python 3.7 nao especificado na linha de comando.
     echo --
-    echo Usando o caminho padrão: "C:\Program Files\Python37\python.exe"
+    echo Usando o caminho padrao: "C:\Program Files\Python37\python.exe"
     echo --
     set "PYTHON_PATH=C:\Program Files\Python37\python.exe"
 )
@@ -39,6 +39,6 @@ pip install -r requirements.txt
 pip install tensorflow
 
 echo --------------------------------------------------
-echo Instalação Venv finalizada!
+echo Instalacao Venv finalizada!
 echo --------------------------------------------------
 pause

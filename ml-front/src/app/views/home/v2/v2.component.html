@@ -1,13 +1,51 @@
 <div class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
     <po-widget class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
-      <input type="file" id="inputFile" name="inputFile" accept=".png,.jpg,.jpeg,.bmp">
-      <po-button po-button po-button-icon="po-icon-upload" po-button-type="primary" (click)="enviaImagemParaPredict()">
-        <po-icon po-button-icon="po-icon-upload"></po-icon>
-        Enviar
-      </po-button>
-      <div class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
-        <img *ngIf="pathImage" [src]="pathImage" width="150px" height="150px">
-        <span *ngIf="prediction">Predição: {{prediction}}</span>
-      </div>
+      <po-accordion>
+        <po-accordion-item p-label="Classificação de Imagem">
+          Selecione uma imagem para predição,<br>
+          o modelo irá predizer qual o objeto da imagem.<br>
+          <br>
+          Predições disponiveis:
+          <br>
+          1. Avião<br>
+          2. Automóvel<br>
+          3. Pássaro<br>
+          4. Gato<br>
+          5. Cervo<br>
+          6. Cachorro<br>
+          7. Sapo<br>
+          8. Cavalo<br>
+          9. Navio<br>
+          10. Caminhão<br>
+        </po-accordion-item>
+      </po-accordion>
+
+      <po-upload
+        name="file"
+        p-form-field="file"
+        [p-restrictions]="restrictions"
+        [p-url]="urlUpload"
+        (p-upload)="enviaImagemParaPredict($event)"
+        (p-success)="sucessoEnviarImagem($event)"
+        class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5"
+      ></po-upload>
+      <po-container class="po-xl-12 po-lg-12 po-mb-12 po-sm-12 po-mt-5">
+        <img 
+          *ngIf="pathImage" 
+          [src]="pathImage" 
+          width="150px" 
+          height="150px"
+          class="po-offset-sm-3 
+                 po-offset-mb-3 
+                 po-offset-lg-3 
+                 po-offset-xl-3 
+                 po-xl-6 
+                 po-lg-6 
+                 po-mb-6 
+                 po-sm-6 
+                 po-mt-5">
+  
+        <div *ngIf="prediction" class="po-md-12 po-mt-5 po-font-title">Classificação obtido: {{prediction}}</div>
+      </po-container>
     </po-widget>
   </div>

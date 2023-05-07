@@ -1,0 +1,5 @@
+table Image{
+    data: [ubyte];
+}
+
+root_type Image;
