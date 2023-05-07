@@ -12,7 +12,7 @@ export interface ResponseError{
 }
 
 export interface ResponseImage{
-    result: number;
+    predict: number;
 }
 
 export interface ResponseFeedfoward{

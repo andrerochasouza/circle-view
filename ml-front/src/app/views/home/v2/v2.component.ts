@@ -1,9 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { PoModalAction, PoUploadComponent, PoUploadFileRestrictions } from '@po-ui/ng-components';
-import { PoUploadFile } from '@po-ui/ng-components/lib/components/po-field/po-upload/po-upload-file';
+import { PoUploadFileRestrictions } from '@po-ui/ng-components';
 import { take } from 'rxjs';
+import { Response, ResponseImage } from 'src/app/components/model/response';
 import { V2Service } from 'src/app/components/services/v2/v2.service';
+import { environment } from 'src/environments/environment.prod';
 
 
 @Component({
@@ -13,40 +15,62 @@ import { V2Service } from 'src/app/components/services/v2/v2.service';
 })
 export class V2Component {
 
+  restrictions: PoUploadFileRestrictions = {
+    allowedExtensions: ['.png', '.jpg', '.jpeg', '.bmp'],
+    maxFileSize: 10000000,
+    minFileSize: 0
+  };
+  upload: Array<any> = [];
+  urlUpload: string = `${environment.api}/v2/cnn-cifar10/predict`;
+
   pathImage: SafeUrl = '';
-  prediction: number = 0;
+  prediction: string = '';
 
   constructor(private v2Service: V2Service,
               private sanitizer: DomSanitizer) { }
 
-  enviaImagemParaPredict() {
-    let inputFile = document.getElementById("inputFile") as HTMLInputElement;
-    let file: File;
 
-    if (!inputFile.files || !inputFile.files[0]){
-      alert('Selecione uma imagem');
-      return;
+  sucessoEnviarImagem(event: HttpResponse<Response<ResponseImage>>): void{
+    let predict = event.body?.resource.predict;
+    switch(predict){
+      case 0:
+        this.prediction = 'Avião';
+        break;
+      case 1:
+        this.prediction = 'Carro';
+        break;
+      case 2:
+        this.prediction = 'Pássaro';
+        break;
+      case 3:
+        this.prediction = 'Gato';
+        break;
+      case 4:
+        this.prediction = 'Cervo';
+        break;
+      case 5:
+        this.prediction = 'Cachorro';
+        break;
+      case 6:
+        this.prediction = 'Sapo';
+        break;
+      case 7:
+        this.prediction = 'Cavalo';
+        break;
+      case 8:
+        this.prediction = 'Navio';
+        break;
+      case 9:
+        this.prediction = 'Caminhão';
+        break;
+      default:
+        this.prediction = 'Erro ao prever a imagem';
+        break;
     }
+  }
 
-    file = inputFile.files[0];
-
-    if (file.type != 'image/png' && file.type != 'image/jpeg' && file.type != 'image/jpg' && file.type != 'image/bmp') {
-      alert('Formato de imagem não suportado');
-      return;
-    }
-      
+  enviaImagemParaPredict(event: any) {
+    let file: File = event.file.rawFile;
     this.pathImage = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
-    console.log(this.pathImage);
-
-    this.v2Service.enviaImagemCifar10Predict(file)
-        .pipe(take(1))
-        .subscribe({
-          next: response => {
-            this.prediction = response.resource.result;
-          },
-          error: error => {
-            alert('Erro ao realizar o feedfoward. Message Error - ' + error);
-          }
-    });
-}
+  }
 }

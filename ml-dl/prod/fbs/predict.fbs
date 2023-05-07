@@ -1,0 +1,5 @@
+table Predict {
+  predict: int;
+}
+
+root_type Predict;
